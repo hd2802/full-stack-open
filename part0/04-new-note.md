@@ -5,32 +5,31 @@ participant server
 
 Note right of browser: The "notes" page is already rendered
 
-browser-->>server: POST new_note_content
+browser -->> server: POST new_note_content
 activate server
-server-->>browser: Status code: 302
+server -->> browser: Status code: 302
 deactivate server
 
 Note right of browser: "notes" page is reloaded
 
-browser-->> GET https://studies.cs.helsinki.fi/exampleapp/notes
+browser -->> server: GET /exampleapp/notes
 activate server
-server-->> HTML document 
+server -->> browser: HTML document
 deactivate server
 
-browser-->> GET https://studies.cs.helsinki.fi/exampleapp/main.css
+browser -->> server: GET /exampleapp/main.css
 activate server
-server-->> css file
+server -->> browser: CSS file
 deactivate server
 
-browser -->> GET https://studies.cs.helsinki.fi/exampleapp/main.js
+browser -->> server: GET /exampleapp/main.js
 activate server
-server-->> js file
+server -->> browser: JS file
 deactivate server
 
-browser -->> GET https://studies.cs.helsinki.fi/exampleapp/data.json
+browser -->> server: GET /exampleapp/data.json
 activate server
-server -->> json file
+server -->> browser: JSON file
 deactivate server
-
 
 ```
