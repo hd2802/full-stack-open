@@ -3,24 +3,25 @@ sequenceDiagram
 participant browser
 participant server
 
-browser --> GET https://studies.cs.helsinki.fi/exampleapp/spa
+browser --> server: GET https://studies.cs.helsinki.fi/exampleapp/spa
 activate server
 server --> browser: HTML file
 deactivate server
 
-browser -->> GET https://studies.cs.helsinki.fi/exampleapp/main.css
+browser --> server: GET https://studies.cs.helsinki.fi/exampleapp/main.css
 activate server
-server -->> css file
+server --> browser: CSS file
 deactivate server
 
-browser -->> GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+browser --> server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
 activate server
-server -->> js file
+server --> browser: JS file
 deactivate server
 
-browser -->> GET https://studies.cs.helsinki.fi/exampleapp/data.json
+browser --> server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
 activate server
-server -->> json file
+server --> browser: JSON file
 deactivate server
+
 
 ```
