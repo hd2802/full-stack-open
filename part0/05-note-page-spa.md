@@ -8,7 +8,7 @@ activate server
 server --> browser: HTML file
 deactivate server
 
-browser-->> GET https://studies.cs.helsinki.fi/exampleapp/main.css
+browser -->> GET https://studies.cs.helsinki.fi/exampleapp/main.css
 activate server
 server-->> css file
 deactivate server
