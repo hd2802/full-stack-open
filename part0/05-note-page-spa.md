@@ -10,12 +10,12 @@ deactivate server
 
 browser -->> GET https://studies.cs.helsinki.fi/exampleapp/main.css
 activate server
-server-->> css file
+server -->> css file
 deactivate server
 
 browser -->> GET https://studies.cs.helsinki.fi/exampleapp/spa.js
 activate server
-server-->> js file
+server -->> js file
 deactivate server
 
 browser -->> GET https://studies.cs.helsinki.fi/exampleapp/data.json
