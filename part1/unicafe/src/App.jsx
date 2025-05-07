@@ -34,6 +34,36 @@ const Percentage = ({ good, total }) => {
   )
 }
 
+const StatsLine = ({ text, value }) => {
+  return (
+    <div>
+      {text} {value}
+    </div>
+  )
+}
+
+const Statistics = (props) => {
+  if (props.total === 0) {
+    return (
+      <div>
+        No feedback given
+      </div>
+    )
+  }
+  else {
+    return (
+      <div>
+          <StatsLine text={"good"} value={props.good} />
+          <StatsLine text={"neutral"} value={props.neutral} />
+          <StatsLine text={"bad"} value={props.bad} />
+          <StatsLine text="total" value={props.total} />
+          <Average good={props.good} bad={props.bad} total={props.total} />
+          <Percentage good={props.good} total={props.total} />
+      </div>
+    )
+  }
+}
+
 const App = () => {
   const [good, setGood] = useState(0)
   const [neutral, setNeutral] = useState(0)
@@ -75,15 +105,7 @@ const App = () => {
       </div>
 
     <h1>statistics</h1>
-    good {good} 
-    <br></br>
-    neutral {neutral}
-    <br></br>
-    bad {bad}
-    <br></br>
-    all {total}
-    <Average good={good} bad={bad} total={total} />
-    <Percentage good={good} total={total} />
+    <Statistics good={good} neutral={neutral} bad={bad} total={total} />
     </div>
   )
 }
