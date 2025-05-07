@@ -1,40 +1,14 @@
 import { useState } from 'react'
 
-const Average = ({ good, bad, total }) => {
-  if (total === 0) {
-    return (
-      <div>
-        average 0
-      </div>
-    )
-  }
-  else {
-    return (
-      <div>
-        average {(good + bad * -1 )/ total}
-      </div>
-    )
-  }
-}
-
-const Percentage = ({ good, total }) => {
-  // why is this a let and not a const?
-  let percentage = 0
-  if (total === 0) {
-    percentage = 0
-  }
-  else {
-    percentage = (good / total) * 100
-  }
-
+const Button = ({ text, func }) => {
   return (
-    <div>
-      percentage {percentage}
-    </div>
+    <button onClick={func} >
+      {text}
+    </button>
   )
 }
 
-const StatsLine = ({ text, value }) => {
+const StatisticsLine = ({ text, value }) => {
   return (
     <div>
       {text} {value}
@@ -53,12 +27,16 @@ const Statistics = (props) => {
   else {
     return (
       <div>
-          <StatsLine text={"good"} value={props.good} />
-          <StatsLine text={"neutral"} value={props.neutral} />
-          <StatsLine text={"bad"} value={props.bad} />
-          <StatsLine text="total" value={props.total} />
-          <Average good={props.good} bad={props.bad} total={props.total} />
-          <Percentage good={props.good} total={props.total} />
+          <StatisticsLine text={"good"} value={props.good} />
+          <StatisticsLine text={"neutral"} value={props.neutral} />
+          <StatisticsLine text={"bad"} value={props.bad} />
+          <StatisticsLine text="total" value={props.total} />
+          <StatisticsLine text="average" value={
+            (props.total === 0) ? 0 : (props.good + props.bad * -1) / props.total
+          } />
+          <StatisticsLine text="positive" value = {
+            (props.total === 0) ? 0 : ((props.good / props.total)) * 100 + "%"
+          } />
       </div>
     )
   }
@@ -93,15 +71,9 @@ const App = () => {
     <div>
       <h1>give feedback</h1>
       <div>
-        <button onClick={handleGood}>
-          good
-        </button>
-        <button onClick={handleNeutral}>
-          neutral
-        </button>
-        <button onClick={handleBad}>
-          bad
-        </button>
+        <Button text={"good"} func={handleGood} />
+        <Button text={"neutral"} func={handleNeutral} />
+        <Button text={"bad"} func={handleBad} />
       </div>
 
     <h1>statistics</h1>
