@@ -14,12 +14,26 @@ const Part = ({ content }) => {
     )
 }
 
+// array.reduce(function(total, currentValue, currentIndex, arr), initialValue)
+const Total = ({ parts }) => {
+    const initial = 0
+    const total = parts.reduce(
+        (acc, curr) => acc + curr, 0
+    );
+    return (
+        <>
+            <b>total of {total} exercises</b>
+        </>
+    )
+}
+
 const Content = ({ parts }) => {
     return (
         <>
             {parts.map(value => (
                 <Part key={value.id} content={value} />
             ))}
+            <Total parts={parts} />
         </>
     )
 }
