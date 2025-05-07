@@ -38,12 +38,12 @@ const Average = ({ good, neutral, bad }) => {
   );
 }
 
-const Statistics = ({ good, neutral, bad }) => {
+const Statistics = (props) => {
   return (
     <div>
-        <Total good={good} neutral={neutral} bad={bad} />
-        <PercentagePositive good={good} neutral={neutral} bad={bad} />
-        <Average good={good} neutral={neutral} bad={bad} />
+        <Total good={props.good} neutral={props.neutral} bad={props.bad} />
+        <PercentagePositive good={props.good} neutral={props.neutral} bad={props.bad} />
+        <Average good={props.good} neutral={props.neutral} bad={props.bad} />
     </div>
   )
 }
@@ -55,6 +55,20 @@ const App = () => {
 
   return (
     <div>
+      <h1>give feedback</h1>
+      <div>
+        <button onClick={() => setGood(good + 1)}>
+          good
+        </button>
+        <button onClick={() => setNeutral(neutral + 1)}>
+          neutral
+        </button>
+        <button onClick={() => setBad(bad + 1)}>
+          bad
+        </button>
+      </div>
+
+      <h1> statistics </h1>
         good {good} <br></br>
         neutral {neutral} <br></br>
         bad {bad}
