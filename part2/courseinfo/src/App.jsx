@@ -23,15 +23,18 @@ const Content = ({ parts }) => {
 }
 
 const Total = ({ parts }) => {
+  const sum = parts.reduce(
+    (accumulator, ex) => accumulator + ex.exercises,
+    0,
+  );
   return (
     <div>
-      <b> total of {parts[0].exercises + parts[1].exercises + parts[2].exercises} exercises</b>
+      <b> total of {sum} exercises</b>
     </div>
   )
 }
 
 const Course = ({ course }) => {
-  console.log(course)
   return (
     <div>
       <Header course={course.name} />
