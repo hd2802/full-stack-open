@@ -4,10 +4,10 @@ const Header = ({ course }) => {
   )
 }
 
-const Part = ({ part, exercises }) => {
+const Part = ({ course }) => {
   return (
-    <div>
-      {part} {exercises}
+    <div key={course.id}>
+      {course.name} {course.exercises}
     </div>
   )
 }
@@ -15,9 +15,9 @@ const Part = ({ part, exercises }) => {
 const Content = ({ parts }) => {
   return (
     <div>
-      <Part part={parts[0].name} exercises={parts[0].exercises} />
-      <Part part={parts[1].name} exercises={parts[1].exercises} />
-      <Part part={parts[2].name} exercises={parts[2].exercises} />
+        {parts.map(part => 
+          <Part course={part} />
+        )}
     </div>
   )
 }
@@ -45,29 +45,58 @@ const Course = ({ course }) => {
 }
 
 const App = () => {
-  const course = {
-    id: 1,
-    name: 'Half Stack application development',
-    parts: [
+    const courses = [
       {
-        name: 'Fundamentals of React',
-        exercises: 10,
-        id: 1
-      },
+        name: 'Half Stack application development',
+        id: 1,
+        parts: [
+          {
+            name: 'Fundamentals of React',
+            exercises: 10,
+            id: 1
+          },
+          {
+            name: 'Using props to pass data',
+            exercises: 7,
+            id: 2
+          },
+          {
+            name: 'State of a component',
+            exercises: 14,
+            id: 3
+          },
+          {
+            name: 'Redux',
+            exercises: 11,
+            id: 4
+          }
+        ]
+      }, 
       {
-        name: 'Using props to pass data',
-        exercises: 7,
-        id: 2
-      },
-      {
-        name: 'State of a component',
-        exercises: 14,
-        id: 3
+        name: 'Node.js',
+        id: 2,
+        parts: [
+          {
+            name: 'Routing',
+            exercises: 3,
+            id: 1
+          },
+          {
+            name: 'Middlewares',
+            exercises: 7,
+            id: 2
+          }
+        ]
       }
     ]
-  }
-
-  return <Course course={course} />
+  
+    return (
+      <div>
+        {courses.map(course => 
+          <Course course={course} />
+        )}
+      </div>
+    )
 }
 
 export default App
