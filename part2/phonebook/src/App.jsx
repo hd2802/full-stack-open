@@ -27,8 +27,8 @@ const App = () => {
         id: String(persons.length + 1),
       }
     
-      //setPersons(persons.concat(personObject))
-      //setNewName('')
+      setPersons(persons.concat(personObject))
+      setNewName('')
     }
   }
 
