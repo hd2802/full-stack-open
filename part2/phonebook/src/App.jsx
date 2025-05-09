@@ -5,24 +5,22 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import PersonList from './components/PersonList'
 
+import phonebookService from './services/phonebook'
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [filtered, setFiltered] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data)
-
-        // this line ensures that all numbers are loaded initially 
-        setFiltered(response.data)
+  useEffect(() => {
+    phonebookService
+      .getAll()
+      .then(persons => {
+        setFiltered(persons)
+        setPersons(persons)
       })
-  }
-
-  useEffect(hook, [])
+  }, [])
 
   //console.log(persons)
 
@@ -41,10 +39,11 @@ const App = () => {
           id: String(persons.length + 1),
         }
 
-        axios
-          .post('http://localhost:3001/persons', personObject)
-          .then(response => {
-            setPersons(persons.concat(response.data))
+        phonebookService
+          .create(personObject)
+          .then(returned => {
+            setPersons(persons.concat(returned))
+            setFiltered(filtered.concat(returned))
           })
       
         setPersons(persons.concat(personObject))
