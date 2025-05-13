@@ -4,7 +4,7 @@ sequenceDiagram
     participant server
 
     Note right of browser: Page is already loaded
-    browser->>server: POST <new_note contents>
+    browser->>server: POST new note 
     activate server
     server-->>browser: Status code: 302
     deactivate server
