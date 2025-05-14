@@ -8,15 +8,20 @@ const Header = ({ course }) => {
   )
 }
 
+const Part = ({ part, number }) => {
+  return (
+    <div>
+      {part} {number}
+    </div>
+  )
+}
+
 const Content = ({ parts, exercises }) => {
   return (
     <div>
-      {parts[0]} {exercises[0]}
-      <br />
-      {parts[1]} {exercises[1]}
-      <br />
-      {parts[2]} {exercises[2]}
-      <br />
+      <Part part={parts[0]} number={exercises[0]} />
+      <Part part={parts[1]} number={exercises[1]} />
+      <Part part={parts[2]} number={exercises[2]} />
     </div>
   )
 }
