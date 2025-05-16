@@ -18,19 +18,31 @@ const Part = ({ part }) => {
 }
 
 const Content = ({ course }) => {
+  // forEach does not return anything so it isnt applicable here
   return (
     <div>
-      <Part part={course.parts[0]} />
-      <Part part={course.parts[1]} />
-      <Part part={course.parts[2]} />
+      {
+        course.parts.map((part, index) => (
+          <div key={index}>
+            <Part part={part} />
+          </div>
+        ))
+      }
     </div>
   )
 }
 
 const Total = ({ course }) => {
+  let total = 0
   return (
     <div>
-      Total: {course.parts[0].exercises + course.parts[1].exercises + course.parts[2].exercises}
+      Total: 
+      {
+        course.parts.forEach((part) => {
+          total += part.exercises 
+        })
+      }
+      {total}
     </div>
   )
 }
