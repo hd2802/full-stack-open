@@ -1,12 +1,30 @@
 import { useState } from 'react'
 
+const Statistics = ({ good, bad, neutral, total}) => {
+  return (
+    <div>
+      <div>
+        good {good} 
+        <br />
+        neutral {neutral}
+        <br />
+        bad {bad}
+        <br />
+        total {total}
+        <br />
+        average {(good + (bad * -1)) / (total === 0 ? 1 : total)}
+        <br />
+        positive {(good / (total === 0 ? 1 : total)) * 100} %
+      </div>
+    </div>
+  )
+}
+
 const App = () => {
   const [ good, setGood ] = useState(0)
   const [ neutral, setNeutral ] = useState(0)
   const [ bad, setBad ] = useState(0)
   const [ total, setTotal ] = useState(0)
-  const [ average, setAverage ] = useState(0)
-  const [ ratio, setRatio ] = useState(0)
 
   const handleInput = () => {
     setTotal(total + 1)
@@ -14,22 +32,16 @@ const App = () => {
 
   const handleGood = () => {
     setGood(good + 1)
-    setAverage(((average * total) + 1) / (total + 1))
-    setRatio((good + 1) / (total + 1))
     handleInput()
   }
 
   const handleNeutral = () => {
     setNeutral(neutral + 1)
-    setAverage((average * total) / (total + 1))
-    setRatio((good) / (total + 1))
     handleInput()
   }
 
   const handleBad = () => {
     setBad(bad + 1)
-    setAverage(((average * total) - 1) / (total + 1))
-    setRatio((good) / (total + 1))
     handleInput()
   }
 
@@ -51,23 +63,10 @@ const App = () => {
         </button>
 
       </div>
-
-      <div>
-        <h1> statistics </h1>
-        good {good}
-        <br />
-        neutral {neutral}
-        <br />
-        bad {bad}
-        <br />
-      </div>
       
       <div>
-        total {total}
-        <br />
-        average {average}
-        <br />
-        percentage {ratio * 100} %
+        <h1>statistics</h1>
+        <Statistics good={good} bad={bad} neutral={neutral} total={total} />
       </div>
     </div>
   )
