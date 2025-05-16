@@ -12,9 +12,14 @@ const Button = ({ text, functionReference }) => {
 
 const StatisticsLine = ({ text, value }) => {
   return (
-    <div>
-      {text} {value}
-    </div>
+    <tr>
+      <td>
+        {text}
+      </td> 
+      <td>
+        {value}
+      </td>
+    </tr>
   )
 }
 
@@ -29,13 +34,13 @@ const Statistics = ({ good, bad, neutral, total}) => {
   }
   else {
     return (
-      <div>
+      <table>
         <StatisticsLine text={"good"} value={good} />
         <StatisticsLine text={"neutral"} value={neutral} />
         <StatisticsLine text={"bad"} value={bad} />
         <StatisticsLine text={"average"} value={(good + (bad * -1)) / (total === 0 ? 1 : total)} />
         <StatisticsLine text={"positive"} value={(good / (total === 0 ? 1 : total)) * 100} />
-      </div>
+      </table>
     )
   }
 }
