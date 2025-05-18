@@ -1,3 +1,4 @@
+// 2.5: separate component
 const Header = ({ course }) => {
   return (
     <h1>
