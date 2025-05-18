@@ -31,14 +31,11 @@ const Content = ({ course }) => {
 }
 
 const Total = ({ course }) => {
-  let total = 0
+  const total = course.parts.reduce((acc, c) => {
+    return acc += c.exercises
+  }, 0)
   return (
     <div>
-      {
-        course.parts.forEach((part) => {
-          total += part.exercises 
-        })
-      }
       <b>
       total of {total} exercises
       </b>
