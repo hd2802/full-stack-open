@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react'
+import phonebookService from './services/phonebookService'
+
 import axios from 'axios'
 
 import Persons from './components/Persons'
@@ -14,8 +16,8 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
 
   useEffect(() => {
-    axios
-      .get('http://localhost:3001/persons')
+    phonebookService
+      .getAll()
       .then(response => {
         setPersons(response.data)
         setFilteredPersons(response.data)
@@ -39,10 +41,17 @@ const App = () => {
         number: newNumber
       }
 
-      setPersons(persons.concat(personObject))
-      setFilteredPersons(filteredPersons.concat(personObject))
-      setNewName('')
-      setNewNumber('')
+      phonebookService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setFilteredPersons(filteredPersons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
+        .catch(error => {
+          console.log('error with post operation')
+        })
     }
     else {
       alert(`${newName} is already added to the phonebook`)

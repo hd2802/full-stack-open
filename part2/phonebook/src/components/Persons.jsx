@@ -1,6 +1,6 @@
 import Person from './Person'
 
-const Persons = ({ personlist }) => {
+const Persons = ({ personlist = [] }) => {
   return (
     <ul>
         {personlist.map((person) => (
