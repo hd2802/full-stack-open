@@ -1,11 +1,16 @@
-import Person from './Person'
 
-const Persons = ({ personlist = [] }) => {
+
+const Persons = ({ personlist, handleRemove }) => {
   return (
     <ul>
         {personlist.map((person) => (
-          <Person key={person.name} name={person.name} number={person.number}/>
-        ))}
+          <li key={person.name}> {person.name} {person.number} 
+          <button onClick={() => handleRemove(person.name, person.id)}>
+            delete
+          </button>
+        </li>
+
+        ))} 
     </ul>
   )
 }

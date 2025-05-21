@@ -1,11 +1,6 @@
 {
   "persons": [
     {
-      "name": "Arto Hellas",
-      "number": "040-123456",
-      "id": "1"
-    },
-    {
       "name": "Ada Lovelace",
       "number": "39-44-5323523",
       "id": "2"
@@ -31,29 +26,29 @@
       "number": "20-98-1122334"
     },
     {
-      "id": "f302",
-      "name": "Jake",
-      "number": "69"
+      "name": "Barbara Liskov",
+      "number": "32-76-9876543",
+      "id": "5"
     },
     {
-      "id": "0240",
-      "name": "NewNumberTest",
-      "number": "10000"
+      "name": "Donald Knuth",
+      "number": "45-32-1234567",
+      "id": "6"
     },
     {
-      "id": "7c51",
-      "name": "NewNumberTest2",
-      "number": "120020201"
+      "name": "Linus Torvalds",
+      "number": "78-11-7654321",
+      "id": "7"
     },
     {
-      "id": "a672",
-      "name": "NewNumbertest3",
-      "number": "10101089898981"
+      "id": "ca31",
+      "name": "Margaret Hamilton",
+      "number": "91-33-8765432"
     },
     {
-      "id": "32db",
-      "name": "test",
-      "number": "69"
+      "id": "7700",
+      "name": "Tim Berners-Lee",
+      "number": "66-89-2345678"
     }
   ]
 }

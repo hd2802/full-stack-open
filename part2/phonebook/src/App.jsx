@@ -78,6 +78,17 @@ const App = () => {
     }))
   }
 
+  const handleRemove = (name, id) => {
+    if(window.confirm(`are you sure you want to delete ${name}?`)) {
+      phonebookService
+        .remove(id).then(() => {
+          // update the UI to reflect the deleted person
+          setPersons(persons.filter((person) => { return person.name !== name}))
+          setFilteredPersons(filteredPersons.filter((person) => { return person.name !== name}))
+        })
+    }
+  }
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -89,7 +100,7 @@ const App = () => {
        handleNumberChange={handleNumberChange} />
 
       <h2>Numbers</h2>
-      <Persons personlist={filteredPersons} />
+      <Persons personlist={filteredPersons} handleRemove={handleRemove} />
     </div>
   )
 }
