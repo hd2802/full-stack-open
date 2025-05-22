@@ -69,7 +69,7 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  if(persons.sum(p => p.name === person.name)) {
+  if(persons.some(p => p.name === person.name)) {
     response.status(400).json({
       error: 'name must be unique'
     })
@@ -80,7 +80,7 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = requests.params.id
+  const id = request.params.id
   person = persons.filter(person => person.id !== id)
 
   response.status(204).end()
