@@ -3,6 +3,8 @@ const app = express()
 
 app.use(express.json())
 
+const RANDOM = 10000000
+
 let persons = [
     { 
       "id": "1",
@@ -53,6 +55,7 @@ app.get('/api/persons/:id', (request, response) => {
 
 app.post('/api/persons', (request, response) => {
   const person = request.body
+  person.id = Math.floor(Math.random() * RANDOM)
   console.log(person)
   response.json(person)
 })
