@@ -56,6 +56,25 @@ app.get('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
   const person = request.body
   person.id = Math.floor(Math.random() * RANDOM)
+  
+  if (!person.name) {
+    response.status(400).json({
+      error: 'name is missing'
+    })
+  }
+
+  if(!person.number) {
+    response.status(400).json({
+      error: 'number is missing'
+    })
+  }
+
+  if(persons.sum(p => p.name === person.name)) {
+    response.status(400).json({
+      error: 'name must be unique'
+    })
+  }
+
   console.log(person)
   response.json(person)
 })
