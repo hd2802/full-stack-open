@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import phonebookService from './services/phonebookService'
 
-import axios from 'axios'
-
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
@@ -54,7 +52,30 @@ const App = () => {
         })
     }
     else {
-      alert(`${newName} is already added to the phonebook`)
+      if(window.confirm(`${newName} is already added to the phonebook,
+         would you like to update the number?`)) {
+          let og = {}
+
+          persons.forEach(person => {
+            if(person.name === newName) {
+              og = person
+            }
+          })
+
+          if (JSON.stringify(og) !== '{}') {
+            phonebookService.update(og.id, {name: newName, number: newNumber})
+            .then((updatedPerson) => {
+              setPersons(person => {
+                person.id !== updatedPerson.id ? person : updatedPerson
+              })
+            .then((updatedPerson) => {
+              setFilteredPersons(person => {
+                person.id !== updatedPerson.id ? person : updatedPerson
+              })
+            })
+            })
+          }
+      }
       setNewName('')
       setNewNumber('')
     }
