@@ -16,7 +16,8 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
 
-  const [successMessage, setSuccessMessage] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -84,6 +85,14 @@ const App = () => {
               })
             })
             })
+            .catch(error => {
+              setErrorMessage(
+                `${newName} was already removed from server`
+              )
+              setTimeout(() => {
+                setErrorMessage(null)
+              }, 5000)
+            })
           }
       }
       setNewName('')
@@ -122,9 +131,9 @@ const App = () => {
 
   return (
     <div>
-      {/*<Notification message={errorMessage} />*/}
       <h1>Phonebook</h1>
-      <Notification message={successMessage} />
+      <Notification message={successMessage} error={false}/>
+      <Notification message={errorMessage} error={true} />
       <Filter handleSearch={handleSearch} />
 
       <h3>add a new</h3>
