@@ -4,6 +4,9 @@ import phonebookService from './services/phonebookService'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
+import Notification from './components/Notification'
+
+import './index.css'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
@@ -12,6 +15,8 @@ const App = () => {
 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+
+  const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
     phonebookService
@@ -50,6 +55,11 @@ const App = () => {
         .catch(error => {
           console.log('error with post operation')
         })
+      
+        setSuccessMessage(`${newName} was added successfully`)
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
     }
     else {
       if(window.confirm(`${newName} is already added to the phonebook,
@@ -112,7 +122,9 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      {/*<Notification message={errorMessage} />*/}
+      <h1>Phonebook</h1>
+      <Notification message={successMessage} />
       <Filter handleSearch={handleSearch} />
 
       <h3>add a new</h3>
