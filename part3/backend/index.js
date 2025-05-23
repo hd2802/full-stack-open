@@ -1,7 +1,15 @@
 const express = require('express')
 const app = express()
 
+const morgan = require('morgan')
+
 app.use(express.json())
+
+morgan.token('body', (req) => {
+  return req.method === 'POST' ? JSON.stringify(req.body) : ''
+})
+
+app.use(morgan('tiny'))
 
 const RANDOM = 10000000
 
@@ -75,7 +83,7 @@ app.post('/api/persons', (request, response) => {
     })
   }
 
-  console.log(person)
+  persons = persons.concat(person)
   response.json(person)
 })
 
