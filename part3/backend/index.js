@@ -1,14 +1,27 @@
-require('dotenv').config
+require('dotenv').config()
 const express = require('express')
-const cors = require('cors')
 const app = express()
-const mongoose = require('mongoose')
+const morgan = require('morgan')
 
 const Person = require('./models/person')
 
-app.use(cors())
+const cors = require('cors')
 
-const morgan = require('morgan')
+const whitelist = ["http://localhost:5173"]; 
+
+const corsOptions = { 
+    origin: (origin, callback) => { 
+        if (!origin || whitelist.includes(origin)) { 
+            callback(null, true); 
+        } else { 
+            callback(new Error("Not allowed by CORS")); 
+        } 
+    }, 
+    credentials: true, 
+}; 
+app.use(cors(corsOptions));
+
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.use(express.json())
 
@@ -20,39 +33,18 @@ app.use(morgan('tiny'))
 
 const RANDOM = 10000000
 
-let persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello world</h1>')
 })
 
-app.get('/api/persons', (request, response) => {
+app.get('/persons', (request, response) => {
   Person.find({}).then(person => {
     response.json(person)
   })
 })
 
+/*
 app.get('/info', (request, response) => {
   const num = persons.length
   const timeStamp = new Date()
@@ -62,49 +54,45 @@ app.get('/info', (request, response) => {
       <p>Request recieved at ${timeStamp} </p>
     </div>`)
 })
+*/
 
-app.get('/api/persons/:id', (request, response) => {
-  Person.find({id : id}).then(result => {
+app.get('/persons/:id', (request, response) => {
+  Person.findById(request.params.id).then(result => {
     response.json(result)
   })
 })
 
-app.post('/api/persons', (request, response) => {
-  const person = request.body
-  person.id = Math.floor(Math.random() * RANDOM)
-  
-  if (!person.name) {
-    response.status(400).json({
-      error: 'name is missing'
-    })
+app.post('/persons', (request, response) => {
+  const body = request.body
+
+  if(!body.number) {
+     return response.status(400).json({ error: 'number missing' })
   }
 
-  if(!person.number) {
-    response.status(400).json({
-      error: 'number is missing'
-    })
+  if(!body.name) {
+     return response.status(400).json({ error: 'name missing' })
   }
 
-  if(persons.some(p => p.name === person.name)) {
-    response.status(400).json({
-      error: 'name must be unique'
+  const person = new Person({
+    name: body.name,
+    number: body.number
+  })
+
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
+})
+
+app.delete('/persons/:id', (request, response) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(() => {
+      response.status(204).end()
     })
-  }
-
-  persons = persons.concat(person)
-  response.json(person)
+    .catch(error => {
+      response.status(400).json({ error: 'malformatted id' })
+    })
 })
 
-app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  person = persons.filter(person => person.id !== id)
-
-  response.status(204).end()
-})
-
-app.get('/api/persons', (request, response) => {
-  response.json(persons)
-})
 
 const PORT = process.env.PORT || 3002
 app.listen(PORT, () => {
