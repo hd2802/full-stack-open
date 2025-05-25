@@ -102,7 +102,7 @@ app.get('/api/persons', (request, response) => {
   response.json(persons)
 })
 
-const PORT = 3002
+const PORT = process.env.PORT || 3002
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
