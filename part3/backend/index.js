@@ -1,11 +1,14 @@
+require('dotenv').config
 const express = require('express')
 const cors = require('cors')
 const app = express()
+const mongoose = require('mongoose')
+
+const Person = require('./models/person')
 
 app.use(cors())
 
 const morgan = require('morgan')
-
 
 app.use(express.json())
 
@@ -44,6 +47,12 @@ app.get('/', (request, response) => {
   response.send('<h1>Hello world</h1>')
 })
 
+app.get('/api/persons', (request, response) => {
+  Person.find({}).then(person => {
+    response.json(person)
+  })
+})
+
 app.get('/info', (request, response) => {
   const num = persons.length
   const timeStamp = new Date()
@@ -55,14 +64,9 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(person => person.id === id)
-
-  if (person) {
-    response.json(person)
-  } else {
-    response.status(404).end()
-  }
+  Person.find({id : id}).then(result => {
+    response.json(result)
+  })
 })
 
 app.post('/api/persons', (request, response) => {
