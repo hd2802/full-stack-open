@@ -75,24 +75,27 @@ const App = () => {
 
           if (JSON.stringify(og) !== '{}') {
             phonebookService.update(og.id, {name: newName, number: newNumber})
-            .then((updatedPerson) => {
-              setPersons(person => {
-                person.id !== updatedPerson.id ? person : updatedPerson
+              .then(updatedPerson => {
+                setPersons(persons =>
+                  persons.map(person =>
+                    person.id !== updatedPerson.id ? person : updatedPerson
+                  )
+                )
+                setFilteredPersons(filteredPersons =>
+                  persons.map(person =>
+                    person.id !== updatedPerson.id ? person : updatedPerson
+                  )
+                )
+                setSuccessMessage(`${newName} updated successfully`)
+                setTimeout(() => setSuccessMessage(null), 5000)
               })
-            .then((updatedPerson) => {
-              setFilteredPersons(person => {
-                person.id !== updatedPerson.id ? person : updatedPerson
+              .catch(error => {
+                setErrorMessage(
+                  `${newName} was already removed from server`
+                )
+                setTimeout(() => setErrorMessage(null), 5000)
               })
-            })
-            })
-            .catch(error => {
-              setErrorMessage(
-                `${newName} was already removed from server`
-              )
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-            })
+
           }
       }
       setNewName('')

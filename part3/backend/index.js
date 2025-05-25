@@ -84,6 +84,24 @@ app.post('/persons', (request, response) => {
   })
 })
 
+app.put('/persons/:id', (request, response) => {
+  const body = request.body
+  const id = request.params.id
+
+  Person.findByIdAndUpdate(
+    id,
+    {number : body.number},
+    { new: true, runValidators: true, context: 'query' }
+  ).then(updatedPerson => {
+    if(updatedPerson) {
+      response.json(updatedPerson.toJSON())
+    } else {
+      response.status(404).send({ error: 'Person not found' })
+    }
+  })
+})
+
+
 app.delete('/persons/:id', (request, response) => {
   Person.findByIdAndDelete(request.params.id)
     .then(() => {
