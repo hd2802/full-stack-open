@@ -1,3 +1,5 @@
+// exercise 3.20 not required - formatting of number is not universally known
+
 require('dotenv').config()
 const express = require('express')
 const app = express()
