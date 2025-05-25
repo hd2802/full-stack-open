@@ -1,5 +1,3 @@
-
-
 const Persons = ({ personlist, handleRemove }) => {
   return (
     <ul>

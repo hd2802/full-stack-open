@@ -39,8 +39,8 @@ app.get('/', (request, response) => {
 })
 
 app.get('/persons', (request, response) => {
-  Person.find({}).then(person => {
-    response.json(person)
+  Person.find({}).then( persons => {
+    response.json(persons.map(person => person.toJSON()))
   })
 })
 
@@ -58,7 +58,7 @@ app.get('/info', (request, response) => {
 
 app.get('/persons/:id', (request, response) => {
   Person.findById(request.params.id).then(result => {
-    response.json(result)
+    response.json(result.toJSON())
   })
 })
 
@@ -79,12 +79,12 @@ app.post('/persons', (request, response) => {
   })
 
   person.save().then(savedPerson => {
-    response.json(savedPerson)
+    response.json(savedPerson.toJSON())
   })
 })
 
 app.delete('/persons/:id', (request, response) => {
-  Person.findByIdAndRemove(request.params.id)
+  Person.findByIdAndDelete(request.params.id)
     .then(() => {
       response.status(204).end()
     })
