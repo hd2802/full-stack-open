@@ -25,6 +25,7 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 
 app.use(express.json())
 
+
 morgan.token('body', (req) => {
   return req.method === 'POST' ? JSON.stringify(req.body) : ''
 })
@@ -93,8 +94,24 @@ app.delete('/persons/:id', (request, response) => {
     })
 })
 
-
 const PORT = process.env.PORT || 3002
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+app.use(unknownEndpoint)
+
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if (error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  } 
+
+  next(error)
+}
+app.use(errorHandler)
