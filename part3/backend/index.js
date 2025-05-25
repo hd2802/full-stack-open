@@ -9,19 +9,19 @@ const Person = require('./models/person')
 
 const cors = require('cors')
 
-const whitelist = ["http://localhost:5173"]; 
+const whitelist = ['http://localhost:5173']
 
 const corsOptions = { 
-    origin: (origin, callback) => { 
-        if (!origin || whitelist.includes(origin)) { 
-            callback(null, true); 
-        } else { 
-            callback(new Error("Not allowed by CORS")); 
-        } 
-    }, 
-    credentials: true, 
-}; 
-app.use(cors(corsOptions));
+  origin: (origin, callback) => { 
+    if (!origin || whitelist.includes(origin)) { 
+      callback(null, true)
+    } else { 
+      callback(new Error('Not allowed by CORS'))
+    } 
+  }, 
+  credentials: true, 
+}
+app.use(cors(corsOptions))
 
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
@@ -33,9 +33,6 @@ morgan.token('body', (req) => {
 })
 
 app.use(morgan('tiny'))
-
-const RANDOM = 10000000
-
 
 app.get('/', (request, response) => {
   response.send('<h1>Hello world</h1>')
@@ -57,7 +54,7 @@ app.get('/info', (request, response) => {
         <p>Request received at ${timeStamp}</p>
       </div>
     `)
-  }).catch(error => {
+  }).catch(() => {
     response.status(500).send({ error: 'Something went wrong' })
   })
 })
@@ -72,11 +69,11 @@ app.post('/persons', (request, response) => {
   const body = request.body
 
   if(!body.number) {
-     return response.status(400).json({ error: 'number missing' })
+    return response.status(400).json({ error: 'number missing' })
   }
 
   if(!body.name) {
-     return response.status(400).json({ error: 'name missing' })
+    return response.status(400).json({ error: 'name missing' })
   }
 
   const person = new Person({
@@ -112,7 +109,7 @@ app.delete('/persons/:id', (request, response) => {
     .then(() => {
       response.status(204).end()
     })
-    .catch(error => {
+    .catch(() => {
       response.status(400).json({ error: 'malformatted id' })
     })
 })
@@ -134,7 +131,7 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   } 
-  else if (error.name === "ValidationError") {
+  else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
 
