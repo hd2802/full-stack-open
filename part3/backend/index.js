@@ -45,17 +45,20 @@ app.get('/persons', (request, response) => {
   })
 })
 
-/*
 app.get('/info', (request, response) => {
-  const num = persons.length
-  const timeStamp = new Date()
-  response.send(`
-    <div> 
-      <p>Phonebook has info for ${num} people</p>
-      <p>Request recieved at ${timeStamp} </p>
-    </div>`)
+  Person.find({}).then(persons => {
+    const length = persons.length
+    const timeStamp = new Date()
+    response.send(`
+      <div> 
+        <p>Phonebook has info for ${length} people</p>
+        <p>Request received at ${timeStamp}</p>
+      </div>
+    `)
+  }).catch(error => {
+    response.status(500).send({ error: 'Something went wrong' })
+  })
 })
-*/
 
 app.get('/persons/:id', (request, response) => {
   Person.findById(request.params.id).then(result => {
