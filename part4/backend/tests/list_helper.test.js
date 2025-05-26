@@ -2,31 +2,18 @@ const { test, describe } = require('node:test')
 const assert = require('node:assert')
 const listHelper = require('../utils/list_helper')
 
-test('dummy returns one', () => {
-  const blogs = []
-
-  const result = listHelper.dummy(blogs)
-  assert.strictEqual(result, 1)
-})
-
-describe('total likes', () => {
-  const listWithOneBlog = [
+const listWithOneBlog = [
     {
-      _id: '5a422aa71b54a676234d17f8',
-      title: 'Go To Statement Considered Harmful',
-      author: 'Edsger W. Dijkstra',
-      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
-      likes: 5,
-      __v: 0
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+        likes: 5,
+        __v: 0
     }
-    ]
+]
 
-    test('when list has only one blog, equals the likes of that', () => {
-        const result = listHelper.totalLikes(listWithOneBlog)
-        assert.strictEqual(result, 5)
-    })
-
-    const blogs = [
+const blogs = [
     {
         _id: "5a422a851b54a676234d17f7",
         title: "React patterns",
@@ -44,7 +31,7 @@ describe('total likes', () => {
         __v: 0
     },
     {
-        _id: "5a422b3a1b54a676234d17f9",
+         _id: "5a422b3a1b54a676234d17f9",
         title: "Canonical string reduction",
         author: "Edsger W. Dijkstra",
         url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
@@ -75,10 +62,35 @@ describe('total likes', () => {
         likes: 2,
         __v: 0
     }  
-    ]
+]
+
+test('dummy returns one', () => {
+  const blogs = []
+
+  const result = listHelper.dummy(blogs)
+  assert.strictEqual(result, 1)
+})
+
+describe('total likes', () => {
+    test('when list has only one blog, equals the likes of that', () => {
+        const result = listHelper.totalLikes(listWithOneBlog)
+        assert.strictEqual(result, 5)
+    })
 
     test('when list of blogs has multiple posts, equals the sum of likes', () => {
         const result = listHelper.totalLikes(blogs)
         assert.strictEqual(result, 36)
+    })
+})
+
+describe('favourite blog', () => {
+    test('when list of blogs contains one entry, equals that blog', () => {
+        const result = listHelper.favouriteBlog(listWithOneBlog)
+        assert.deepStrictEqual(result, listWithOneBlog[0])
+    })
+
+    test('when list of blogs is larger than one, equals the blog post with the most likes', () => {
+        const result = listHelper.favouriteBlog(blogs)
+        assert.deepStrictEqual(result, blogs[2])
     })
 })
