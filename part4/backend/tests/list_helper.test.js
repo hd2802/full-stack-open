@@ -65,10 +65,7 @@ const blogs = [
 ]
 
 test('dummy returns one', () => {
-  const blogs = []
-
-  const result = listHelper.dummy(blogs)
-  assert.strictEqual(result, 1)
+  assert.strictEqual(listHelper.dummy(), 1)
 })
 
 describe('total likes', () => {
