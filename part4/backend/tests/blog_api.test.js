@@ -3,6 +3,7 @@ const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
+const helper = require('./test_helper')
 
 const api = supertest(app)
 
@@ -17,7 +18,7 @@ test('blogs are returned as json', async() => {
 
 test('all notes are returned', async () => {
     const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, CURRENT_NOTE_COUNT)
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
 test('returned notes should have the valid id property', async () => {
@@ -31,6 +32,12 @@ test('returned notes should have the valid id property', async () => {
     })
     assert.strictEqual(all_valid, true)
 })
+
+/*
+test('adding a new blog post works correctly', async () => {
+    
+})
+*/
 
 after(async () => {
     await mongoose.connection.close()
