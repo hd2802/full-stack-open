@@ -1,5 +1,6 @@
 // library imports
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import axios from 'axios'
 
 // custom imports
 import Note from './components/Note'
