@@ -1,6 +1,15 @@
+// library imports
+import { useState } from 'react'
+
+// custom imports
 import Note from './components/Note'
 
-const App = ({ notes }) => {
+const App = (props) => {
+  const [notes, setNotes] = useState(props.notes)
+
+  const addNote = (event) => {
+    event.preventDefault()
+  }
   return (
     <div>
       <h1>Notes</h1>
