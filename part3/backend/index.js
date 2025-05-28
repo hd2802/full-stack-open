@@ -1,6 +1,9 @@
 const morgan = require('morgan')
 const express = require('express')
+const cors = require('cors')
 const app = express()
+
+app.use(cors())
 
 // tells morgan how to handle requests that have the 'body' property 
 morgan.token('body', req => {
@@ -10,28 +13,8 @@ morgan.token('body', req => {
 app.use(express.json())
 app.use(morgan(':method :url :body'))
 
-const persons = [
-    { 
-      "id": "1",
-      "name": "Arto Hellas", 
-      "number": "040-123456"
-    },
-    { 
-      "id": "2",
-      "name": "Ada Lovelace", 
-      "number": "39-44-5323523"
-    },
-    { 
-      "id": "3",
-      "name": "Dan Abramov", 
-      "number": "12-43-234345"
-    },
-    { 
-      "id": "4",
-      "name": "Mary Poppendieck", 
-      "number": "39-23-6423122"
-    }
-]
+
+const persons = require('./initial_data').persons
 
 // request contains all the information of the HTTP request
 // response defines how he request is responded to - in this case, we respond by sending
@@ -55,7 +38,7 @@ app.get('/api/persons/:id', (request, response) => {
   const id = request.params.id
   const person = persons.find(person => person.id === id)
   response.json(person)
-})
+}) 
 
 app.delete('/api/persons/:id', (request, response) => {
   const id = request.params.id

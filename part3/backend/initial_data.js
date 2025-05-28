@@ -1,0 +1,49 @@
+exports.persons = [
+    {
+      "name": "Dan Abramov",
+      "number": "39-23-1234567",
+      "id": "1"
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": "2"
+    },
+    {
+      "id": "3",
+      "name": "Grace Hopper",
+      "number": "31-22-5567890"
+    },
+    {
+      "id": "4",
+      "name": "Alan Turing",
+      "number": "20-98-1122334"
+    },
+    {
+      "name": "Barbara Liskov",
+      "number": "32-76-9876543",
+      "id": "5"
+    },
+    {
+      "name": "Donald Knuth",
+      "number": "45-32-1234567",
+      "id": "6"
+    },
+    {
+      "name": "Linus Torvalds",
+      "number": "78-11-7654321",
+      "id": "7"
+    },
+    {
+      "id": "8",
+      "name": "Margaret Hamilton",
+      "number": "91-33-8765432"
+    },
+    {
+      "id": "9",
+      "name": "Tim Berners-Lee",
+      "number": "66-89-2345678"
+    }
+  ]
+
+
