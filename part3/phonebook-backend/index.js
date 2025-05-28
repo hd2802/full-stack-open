@@ -2,8 +2,13 @@ const morgan = require('morgan')
 const express = require('express')
 const app = express()
 
+// tells morgan how to handle requests that have the 'body' property 
+morgan.token('body', req => {
+  return JSON.stringify(req.body)
+})
+
 app.use(express.json())
-app.use(morgan('tiny'))
+app.use(morgan(':method :url :body'))
 
 const persons = [
     { 
