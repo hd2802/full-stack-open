@@ -24,15 +24,10 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'unknown endpoint' })
-}
-
 // these are the middleware assignments 
 app.use(express.json())
 app.use(express.static('dist'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
-app.use(unknownEndpoint)
 app.use(errorHandler)
 
 // for testing and debugging application without the MongoDB connection
@@ -48,7 +43,7 @@ app.get('/', (request, response) => {
 
 // defines event handler that handles HTTP GET requests made to this path of the application
 app.get('/api/persons', (request, response) => {
-  Person.find({}).then(persons => {
+  Person.find({}).then((persons) => {
     response.json(persons)
   })
 })
