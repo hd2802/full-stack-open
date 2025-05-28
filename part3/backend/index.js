@@ -1,7 +1,12 @@
+require('dotenv').config()
 const morgan = require('morgan')
 const express = require('express')
 const cors = require('cors')
+const mongoose = require('mongoose')
+const person = require('./models/person')
 const app = express()
+
+const Person = require('./models/person')
 
 app.use(cors())
 
@@ -14,8 +19,12 @@ app.use(express.json())
 app.use(express.static('dist'))
 app.use(morgan(':method :url :body'))
 
+// for testing and debugging application without the MongoDB connection
+//const persons = require('./initial_data').persons
 
-const persons = require('./initial_data').persons
+// MongoDB/Mongoose database connections
+
+
 
 // request contains all the information of the HTTP request
 // response defines how he request is responded to - in this case, we respond by sending
@@ -26,8 +35,9 @@ app.get('/', (request, response) => {
 
 // defines event handler that handles HTTP GET requests made to this path of the application
 app.get('/api/persons', (request, response) => {
-    // transformation to JSON is automatically produces by express
+  Person.find({}).then(persons => {
     response.json(persons)
+  })
 })
 
 app.get('/info', (request, response) => {
@@ -50,28 +60,7 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
-  if (body.name === null) {
-    return response.status(400).json({
-      error: 'name must be provided'
-    })
-  }
-
-  if (body.number === null) {
-    return response.status(400).json({
-      error: 'number must be provided'
-    })
-  }
-
-  let found = false
-  persons.forEach(person => {
-    person.name === body.name ? found = true : found = false
-  })
-
-  if (found) {
-    return response.status(400).json({
-      error: 'name must be unique'
-    })
-  }
+  // need to update the error handling here for MongoDB 
 
   const newPerson = {
     id: String(persons.length + 1),
@@ -79,12 +68,12 @@ app.post('/api/persons', (request, response) => {
     number : body.number,
   }
 
-  persons.concat(newPerson)
-
-  response.json(newPerson)
+  newPerson.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
