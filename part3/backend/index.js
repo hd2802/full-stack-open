@@ -49,8 +49,14 @@ app.get('/api/persons', (request, response) => {
 })
 
 app.get('/info', (request, response) => {
-    response.send(`<div>Phonebook has info for ${persons.length} people <br />
-        ${Date()}</div>`)
+  Person.find({}).then((persons) => {
+    response.send(
+    `<div>
+      Phonebook has info for ${persons.length} people <br />
+      ${Date()}
+    </div>`
+    )
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
