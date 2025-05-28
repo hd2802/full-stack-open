@@ -46,15 +46,15 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  const person = persons.find(person => person.id === id)
-  response.json(person)
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
+  })
 }) 
 
 app.delete('/api/persons/:id', (request, response) => {
-  const id = request.params.id
-  persons = persons.filter(person => person.id !== id)
-  response.status(204).end()
+  Person.findByIdAndDelete(request.params.id).then(() => {
+    response.status(204).end()
+  })
 })
 
 app.post('/api/persons', (request, response) => {
@@ -62,11 +62,10 @@ app.post('/api/persons', (request, response) => {
 
   // need to update the error handling here for MongoDB 
 
-  const newPerson = {
-    id: String(persons.length + 1),
-    name : body.name,
-    number : body.number,
-  }
+  const newPerson = new Person({
+    name: body.name,
+    number: body.number
+  })
 
   newPerson.save().then(savedPerson => {
     response.json(savedPerson)
