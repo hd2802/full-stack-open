@@ -59,6 +59,29 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
   const body = request.body
 
+  if (body.name === null) {
+    return response.status(400).json({
+      error: 'name must be provided'
+    })
+  }
+
+  if (body.number === null) {
+    return response.status(400).json({
+      error: 'number must be provided'
+    })
+  }
+
+  let found = false
+  persons.forEach(person => {
+    person.name === body.name ? found = true : found = false
+  })
+
+  if (found) {
+    return response.status(400).json({
+      error: 'name must be unique'
+    })
+  }
+
   const newPerson = {
     name : body.name,
     number : body.number,
