@@ -22,9 +22,6 @@ app.use(morgan(':method :url :body'))
 // for testing and debugging application without the MongoDB connection
 //const persons = require('./initial_data').persons
 
-// MongoDB/Mongoose database connections
-
-
 
 // request contains all the information of the HTTP request
 // response defines how he request is responded to - in this case, we respond by sending
