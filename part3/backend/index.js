@@ -31,7 +31,7 @@ const unknownEndpoint = (request, response) => {
 // these are the middleware assignments 
 app.use(express.json())
 app.use(express.static('dist'))
-app.use(morgan(':method :url :body'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 app.use(unknownEndpoint)
 app.use(errorHandler)
 
