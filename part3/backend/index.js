@@ -15,9 +15,25 @@ morgan.token('body', req => {
   return JSON.stringify(req.body)
 })
 
+const errorHandler = (error, request, response, next) => {
+  console.error(error.message)
+
+  if(error.name === 'CastError') {
+    return response.status(400).send({ error: 'malformatted id' })
+  }
+  next(error)
+}
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: 'unknown endpoint' })
+}
+
+// these are the middleware assignments 
 app.use(express.json())
 app.use(express.static('dist'))
 app.use(morgan(':method :url :body'))
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 // for testing and debugging application without the MongoDB connection
 //const persons = require('./initial_data').persons
