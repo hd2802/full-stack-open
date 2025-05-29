@@ -47,6 +47,49 @@ test('all blogs have the appropriate id attribute', async () => {
     assert.strictEqual(valid, true)
 })
 
+test('a valid blog can be added', async () => {
+    const newBlog = {
+        title: "Type wars",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+        likes: 2
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(newBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+    const titles = blogsAtEnd.map(b => b.title)
+    assert(titles.includes('Type wars'))
+})
+
+test('new blogs default to 0 likes unless specified', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const testBlog = {
+        title: "Type wars",
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html"
+    }
+
+    const response = await api
+        .post('/api/blogs')
+        .send(testBlog)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+    const newBlog = response.body
+    
+    assert.strictEqual(newBlog.likes, 0)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })

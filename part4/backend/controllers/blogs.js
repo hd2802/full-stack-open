@@ -6,20 +6,25 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', (request, response, next) => {
+blogsRouter.post('/', async (request, response, next) => {
   const body = request.body
 
+  const { title, author, url, likes } = request.body
+
+  if (!title || !url ) {
+    return response.status(400).json({ error : 'title or url is missing' })
+  }
+
   const blog = new Blog({
-    title: body.title,
-    author: body.author,
-    url: body.url,
-    likes: body.likes
+    title, author, url, likes: likes ?? 0
   })
 
-  blog.save().then((savedBlog) => {
+  try {
+    const savedBlog = await blog.save()
     response.status(201).json(savedBlog)
-  })
-  .catch(error => next(error))
+  } catch (exception) {
+    next(exception)
+  }
 })
 
 module.exports = blogsRouter
