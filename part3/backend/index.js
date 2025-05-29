@@ -1,4 +1,5 @@
 // note: ex 3.20 is too complicated logistically, given area and region codes
+// ex 3.21 has been configured throughout the development
 require('dotenv').config()
 const morgan = require('morgan')
 const express = require('express')
