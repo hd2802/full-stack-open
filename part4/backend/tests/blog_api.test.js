@@ -31,6 +31,22 @@ test('all blogs are returned', async () => {
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
 })
 
+test('all blogs have the appropriate id attribute', async () => {
+    const blogs = await api.get('/api/blogs')
+
+    // bit of a hack-y fix, but it works (for now)
+    let valid = false
+    blogs.body.forEach(blog => {
+        if(!Object.hasOwn(blog, 'id')) {
+            valid = false
+        }
+        else {
+            valid = true
+        }
+    })
+    assert.strictEqual(valid, true)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
