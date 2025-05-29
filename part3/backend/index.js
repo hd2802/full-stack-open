@@ -4,8 +4,6 @@ require('dotenv').config()
 const morgan = require('morgan')
 const express = require('express')
 const cors = require('cors')
-const mongoose = require('mongoose')
-const person = require('./models/person')
 const app = express()
 
 const Person = require('./models/person')
@@ -33,14 +31,11 @@ app.use(express.json())
 app.use(express.static('dist'))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
-// for testing and debugging application without the MongoDB connection
-//const persons = require('./initial_data').persons
-
 // request contains all the information of the HTTP request
 // response defines how he request is responded to - in this case, we respond by sending
 // the header - express automatically sets the value of the response (in this case it is text/html)
 app.get('/', (request, response) => {
-    response.send('<h1>Hello world</h1>')
+  response.send('<h1>Hello world</h1>')
 })
 
 // defines event handler that handles HTTP GET requests made to this path of the application
@@ -53,30 +48,30 @@ app.get('/api/persons', (request, response) => {
 app.get('/info', (request, response) => {
   Person.find({}).then((persons) => {
     response.send(
-    `<div>
-      Phonebook has info for ${persons.length} people <br />
-      ${Date()}
-    </div>`
+      `<div>
+        Phonebook has info for ${persons.length} people <br />${Date()}
+      </div>`
     )
   })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
-  Person.findById(request.params.id).then(person => {
-    if(person) {
-      response.json(person)
-    } else {
-      response.status(404).end()
-    }
-  })
-  .catch(error => next(error))
+  Person.findById(request.params.id).
+    then(person => {
+      if(person) {
+        response.json(person)
+      } else {
+        response.status(404).end()
+      }
+    })
+    .catch(error => next(error))
 }) 
 
 app.delete('/api/persons/:id', (request, response, next) => {
   Person.findByIdAndDelete(request.params.id).then(() => {
     response.status(204).end()
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
@@ -90,7 +85,7 @@ app.post('/api/persons', (request, response, next) => {
   newPerson.save().then(savedPerson => {
     response.json(savedPerson)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
