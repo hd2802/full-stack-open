@@ -101,7 +101,6 @@ const App = () => {
         })
     }
     
-    // Clear form fields regardless of user's choice
     setNewName('')
     setNewNumber('')
   }
