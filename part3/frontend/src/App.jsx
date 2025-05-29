@@ -29,77 +29,83 @@ const App = () => {
   }, [])
 
   const addPerson = (event) => {
-    event.preventDefault()
-
-    let found = false
-
-    persons.forEach(person => {
-      if(person.name === newName) {
-        found = true
-      }
-    })
-
-    if(!found) {
-      const personObject = {
-        name: newName,
-        number: newNumber
-      }
-
-      phonebookService
-        .create(personObject)
-        .then(response => {
-          setPersons(persons.concat(response.data))
-          setFilteredPersons(filteredPersons.concat(response.data))
-          setNewName('')
-          setNewNumber('')
-        })
-        .catch(error => {
-          console.log('error with post operation')
-        })
-      
+  event.preventDefault()
+  
+  const existingPerson = persons.find(person => person.name === newName)
+  
+  if (!existingPerson) {
+    const personObject = {
+      name: newName,
+      number: newNumber
+    }
+    
+    phonebookService
+      .create(personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setFilteredPersons(filteredPersons.concat(response.data))
+        setNewName('')
+        setNewNumber('')
         setSuccessMessage(`${newName} was added successfully`)
         setTimeout(() => {
           setSuccessMessage(null)
         }, 5000)
-    }
-    else {
-      if(window.confirm(`${newName} is already added to the phonebook,
-         would you like to update the number?`)) {
-          let og = {}
+      })
+      .catch((error) => {
+        console.error('Error adding person:', error)
+        setErrorMessage(`Validation error adding person: check all fields are valid`)
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+  } else {
 
-          persons.forEach(person => {
-            if(person.name === newName) {
-              og = person
-            }
-          })
+    if (window.confirm(`${newName} is already added to the phonebook, would you like to update the number?`)) {
+      
+      phonebookService
+        .update(existingPerson.id, { name: newName, number: newNumber })
+        .then((response) => {
+          const updatedPerson = response.data
 
-          if (JSON.stringify(og) !== '{}') {
-            phonebookService.update(og.id, {name: newName, number: newNumber})
-            .then((updatedPerson) => {
-              setPersons(person => {
-                person.id !== updatedPerson.id ? person : updatedPerson
-              })
-            .then((updatedPerson) => {
-              setFilteredPersons(person => {
-                person.id !== updatedPerson.id ? person : updatedPerson
-              })
-            })
-            })
-            .catch(error => {
-              setErrorMessage(
-                `${newName} was already removed from server`
-              )
-              setTimeout(() => {
-                setErrorMessage(null)
-              }, 5000)
-            })
+          setPersons(persons => 
+            persons.map(person => 
+              person.id !== updatedPerson.id ? person : updatedPerson
+            )
+          )
+          
+          setFilteredPersons(filteredPersons => 
+            filteredPersons.map(person => 
+              person.id !== updatedPerson.id ? person : updatedPerson
+            )
+          )
+      
+          setSuccessMessage(`${newName} was updated successfully`)
+          setTimeout(() => {
+            setSuccessMessage(null)
+          }, 5000)
+        })
+        .catch((error) => {
+          // code handles errors separately but inside the same catch block - problem arose when having 2 catch
+          // blocks as both were called
+          console.error('Error updating person:', error)
+          if (error.response && error.response.status === 404) {
+            setErrorMessage(`${newName} was already removed from server`)
+            setPersons(persons => persons.filter(p => p.id !== existingPerson.id))
+            setFilteredPersons(filteredPersons => filteredPersons.filter(p => p.id !== existingPerson.id))
+          } else {
+            setErrorMessage(`Error updating ${newName}: ${error.response?.data?.error || 'check all fields are valid'}`)
           }
-      }
-      setNewName('')
-      setNewNumber('')
+          setTimeout(() => {
+            setErrorMessage(null)
+          }, 5000)
+        })
     }
-
+    
+    // Clear form fields regardless of user's choice
+    setNewName('')
+    setNewNumber('')
   }
+}
 
   const handleNameChange = (event) => {
     setNewName(event.target.value)
