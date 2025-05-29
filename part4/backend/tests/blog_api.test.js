@@ -90,6 +90,45 @@ test('new blogs default to 0 likes unless specified', async () => {
     assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
 })
 
+test('new blogs without a url raise an error', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
+    const blogWithoutURL = {
+        title: "Type wars",
+        author: "Robert C. Martin",
+        likes: 10
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(blogWithoutURL)
+        .expect(400)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+})
+
+test('new blogs without a title raise an error', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+
+    const blogWithoutTitle = {
+        author: "Robert C. Martin",
+        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+        likes: 10
+    }
+
+    await api
+        .post('/api/blogs')
+        .send(blogWithoutTitle)
+        .expect(400)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+})
+
+
 after(async () => {
     await mongoose.connection.close()
 })
