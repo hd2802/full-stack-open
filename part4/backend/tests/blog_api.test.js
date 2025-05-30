@@ -145,6 +145,23 @@ describe('deletion of a blog', () => {
     })
 })  
 
+test('updating the number of likes of a blog works correctly', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = {...blogsAtStart[0]}
+    blogToUpdate.likes = 1000
+    const initialLikes = blogToUpdate.likes
+
+    await api.put(`/api/blogs/${blogToUpdate.id}`)
+        .send(blogToUpdate)
+        .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    const likes = blogsAtEnd.map(b => b.likes)
+    assert(likes.includes(1000))
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+})
 
 after(async () => {
     await mongoose.connection.close()
