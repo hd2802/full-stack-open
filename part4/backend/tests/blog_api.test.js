@@ -20,113 +20,117 @@ beforeEach(async () => {
     await blogObject.save()
 })
 
-test('blogs are returned as json', async () => {
-    await api
+describe('fetching from the api', () => {
+    test('returns blogs as json', async () => {
+        await api
         .get('/api/blogs')
         .expect(200)
-        .expect('Content-Type', /application\/json/)
-})
-
-test('all blogs are returned', async () => {
-    const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, helper.initialBlogs.length)
-})
-
-test('all blogs have the appropriate id attribute', async () => {
-    const blogs = await api.get('/api/blogs')
-
-    // bit of a hack-y fix, but it works (for now)
-    let valid = false
-    blogs.body.forEach(blog => {
-        if(!Object.hasOwn(blog, 'id')) {
-            valid = false
-        }
-        else {
-            valid = true
-        }
+            .expect('Content-Type', /application\/json/)
     })
-    assert.strictEqual(valid, true)
+
+    test('returns all blogs', async () => {
+        const response = await api.get('/api/blogs')
+        assert.strictEqual(response.body.length, helper.initialBlogs.length)
+    })
+
+    test('ensures all blogs have the appropriate id attribute', async () => {
+        const blogs = await api.get('/api/blogs')
+
+        // bit of a hack-y fix, but it works (for now)
+        let valid = false
+        blogs.body.forEach(blog => {
+            if(!Object.hasOwn(blog, 'id')) {
+                valid = false
+            }
+            else {
+                valid = true
+            }
+        })
+        assert.strictEqual(valid, true)
+    })
 })
 
-test('a valid blog can be added', async () => {
-    const newBlog = {
-        title: "Type wars",
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-        likes: 2
-    }
+describe('posting to the api', () => {
+    test('adds a valid blog correctly', async () => {
+        const newBlog = {
+            title: "Type wars",
+            author: "Robert C. Martin",
+            url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+            likes: 2
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(newBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-    
-    const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+        await api
+            .post('/api/blogs')
+            .send(newBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+        
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
 
-    const titles = blogsAtEnd.map(b => b.title)
-    assert(titles.includes('Type wars'))
-})
+        const titles = blogsAtEnd.map(b => b.title)
+        assert(titles.includes('Type wars'))
+    })
 
-test('new blogs default to 0 likes unless specified', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const testBlog = {
-        title: "Type wars",
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html"
-    }
+    test('defaults likes to 0 unless specified', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const testBlog = {
+            title: "Type wars",
+            author: "Robert C. Martin",
+            url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html"
+        }
 
-    const response = await api
-        .post('/api/blogs')
-        .send(testBlog)
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
+        const response = await api
+            .post('/api/blogs')
+            .send(testBlog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
 
-    const newBlog = response.body
-    
-    assert.strictEqual(newBlog.likes, 0)
+        const newBlog = response.body
+        
+        assert.strictEqual(newBlog.likes, 0)
 
-    const blogsAtEnd = await helper.blogsInDb()
-    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
-})
+        const blogsAtEnd = await helper.blogsInDb()
+        assert.strictEqual(blogsAtEnd.length, blogsAtStart.length + 1)
+    })
 
-test('new blogs without a url raise an error', async () => {
-    const blogsAtStart = await helper.blogsInDb()
+    test('returns status code 400 if no title is given', async () => {
+        const blogsAtStart = await helper.blogsInDb()
 
-    const blogWithoutURL = {
-        title: "Type wars",
-        author: "Robert C. Martin",
-        likes: 10
-    }
+        const blogWithoutTitle = {
+            author: "Robert C. Martin",
+            url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
+            likes: 10
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(blogWithoutURL)
-        .expect(400)
-    
-    const blogsAtEnd = await helper.blogsInDb()
+        await api
+            .post('/api/blogs')
+            .send(blogWithoutTitle)
+            .expect(400)
+        
+        const blogsAtEnd = await helper.blogsInDb()
 
-    assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
-})
+        assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+    })
 
-test('new blogs without a title raise an error', async () => {
-    const blogsAtStart = await helper.blogsInDb()
+    test('returns status code 400 if no url is given', async () => {
+        const blogsAtStart = await helper.blogsInDb()
 
-    const blogWithoutTitle = {
-        author: "Robert C. Martin",
-        url: "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
-        likes: 10
-    }
+        const blogWithoutURL = {
+            title: "Type wars",
+            author: "Robert C. Martin",
+            likes: 10
+        }
 
-    await api
-        .post('/api/blogs')
-        .send(blogWithoutTitle)
-        .expect(400)
-    
-    const blogsAtEnd = await helper.blogsInDb()
+        await api
+            .post('/api/blogs')
+            .send(blogWithoutURL)
+            .expect(400)
+        
+        const blogsAtEnd = await helper.blogsInDb()
 
-    assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+        assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+    })
 })
 
 describe('deletion of a blog', () => {
@@ -145,22 +149,24 @@ describe('deletion of a blog', () => {
     })
 })  
 
-test('updating the number of likes of a blog works correctly', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToUpdate = {...blogsAtStart[0]}
-    blogToUpdate.likes = 1000
-    const initialLikes = blogToUpdate.likes
+describe('updating a blog', () => {
+    test('updating the number of likes works correctly', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToUpdate = {...blogsAtStart[0]}
+        blogToUpdate.likes = 1000
+        const initialLikes = blogToUpdate.likes
 
-    await api.put(`/api/blogs/${blogToUpdate.id}`)
-        .send(blogToUpdate)
-        .expect(200)
+        await api.put(`/api/blogs/${blogToUpdate.id}`)
+            .send(blogToUpdate)
+            .expect(200)
 
-    const blogsAtEnd = await helper.blogsInDb()
+        const blogsAtEnd = await helper.blogsInDb()
 
-    const likes = blogsAtEnd.map(b => b.likes)
-    assert(likes.includes(1000))
+        const likes = blogsAtEnd.map(b => b.likes)
+        assert(likes.includes(1000))
 
-    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length)
+    })
 })
 
 after(async () => {
