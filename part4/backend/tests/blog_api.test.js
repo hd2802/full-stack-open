@@ -1,5 +1,5 @@
 const assert = require('node:assert')
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 
@@ -7,6 +7,7 @@ const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
 const helper = require('./test_helper')
+const blog = require('../models/blog')
 const api = supertest(app)
 
 beforeEach(async () => {
@@ -127,6 +128,22 @@ test('new blogs without a title raise an error', async () => {
 
     assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
 })
+
+describe('deletion of a blog', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+        const blogsAtStart = await helper.blogsInDb()
+        const blogToDelete = blogsAtStart[0]
+
+        await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+        const blogsAtEnd = await helper.blogsInDb()
+
+        const titles = blogsAtEnd.map(n => n.title)
+        assert(!titles.includes(blogToDelete.title))
+
+        assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+    })
+})  
 
 
 after(async () => {
