@@ -11,7 +11,7 @@ const helper = require('./test_helper')
 const user = require('../models/user')
 const api = supertest(app)
 
-describe('when we are adding to the database', () => {
+describe('when adding a new user to a database', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -86,6 +86,40 @@ describe('when we are adding to the database', () => {
     const newUser = {
       username: 'topsecreteuser',
       password: '2',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails when no username is supplied', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      password: 'topsecretepassword',
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type', /application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('creation fails when no password is supplied', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'madge',
     }
 
     await api
