@@ -30,8 +30,7 @@ Content-Type: application/json
     "title": "Go To Statement Considered Great!",
     "author": "Edsger W. Not Dijkstra",
     "url": "https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf",
-    "likes": 5,
-    "userId": "684164c0cfea1c25417ef5fc"
+    "likes": 5
 }
 
 ###

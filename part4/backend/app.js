@@ -3,9 +3,12 @@ const mongoose = require('mongoose')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 const middleware = require('./utils/middleware')
+
+// Routers
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 const loginRouter = require('./controllers/login')
+
 const app = express()
 
 logger.info('connecting to', config.MONGODB_URI)
@@ -31,5 +34,7 @@ app.use('/api/login', loginRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
+app.use(middleware.tokenExtractor)
+app.use(middleware.userExtractor)
 
 module.exports = app
