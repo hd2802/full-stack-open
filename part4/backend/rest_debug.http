@@ -33,3 +33,12 @@ Content-Type: application/json
     "likes": 5,
     "userId": "684164c0cfea1c25417ef5fc"
 }
+
+###
+post http://localhost:3001/api/login
+Content-Type: application/json
+
+{
+    "username": "hellas",
+    "password": "test"
+}
