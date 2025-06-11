@@ -41,6 +41,45 @@ describe('data base connection', () => {
     })
 })
 
+describe('adding a new blog post', async () => {
+    test('a new blog post is added successfully', async () => {
+
+        const newBlogObject = {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+            likes: 12,
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlogObject)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+    })
+
+    test('the correct contents of the blog is added to the database', async () => {
+        const newBlogObject = {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html",
+            likes: 12,
+        }
+
+        await api
+            .post('/api/blogs')
+            .send(newBlogObject)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+        const response = await api.get('/api/blogs')
+        
+        const titles = response.body.map(e => e.title)
+
+        assert(titles.includes("Canonical string reduction"))
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
