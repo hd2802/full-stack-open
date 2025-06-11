@@ -32,6 +32,13 @@ describe('data base connection', () => {
         const initialBlogs = helper.initialBlogs
         assert.strictEqual(response.body.length, initialBlogs.length)
     })
+
+    test('all blogs have id property', async () => {
+        const response = await api.get('/api/blogs')
+        response.body.forEach(blog => {
+            assert.notStrictEqual(blog.id, undefined)
+        })
+    })
 })
 
 after(async () => {
