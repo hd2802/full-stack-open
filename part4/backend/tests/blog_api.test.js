@@ -80,6 +80,28 @@ describe('adding a new blog post', async () => {
     })
 })
 
+describe('blog post field verification', async () => {
+    test('adding a post without likes defaults the number of likes to 0', async () => {
+
+        const newBlogObject = {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+            url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(newBlogObject)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+        
+        const blogAsDatabaseObject = response.body
+
+        assert.strictEqual(blogAsDatabaseObject.likes, 0)
+        
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
