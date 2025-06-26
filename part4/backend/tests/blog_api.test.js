@@ -100,6 +100,30 @@ describe('blog post field verification', async () => {
         assert.strictEqual(blogAsDatabaseObject.likes, 0)
         
     })
+
+    test('adding a post without a title returns status code 400', async () => {
+        const blogWithoutTitle = {
+            author: "Edsger W. Dijkstra",
+            url: "http://www.cs.utexas.edu/~EWD/transcriptions/EWD08xx/EWD808.html"
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(blogWithoutTitle)
+            .expect(400)
+    })
+
+        test('adding a post without a url returns status code 400', async () => {
+        const blogWithoutURL = {
+            title: "Canonical string reduction",
+            author: "Edsger W. Dijkstra",
+        }
+
+        const response = await api
+            .post('/api/blogs')
+            .send(blogWithoutURL)
+            .expect(400)
+    })
 })
 
 after(async () => {
