@@ -126,6 +126,15 @@ describe('blog post field verification', async () => {
     })
 })
 
+describe('deletion of a note', () => {
+    test('succeeds with status code 204 if id is valid', async () => {
+        const blogsAtStart = await helper.getCurrentBlogs()
+        const blogToDelete = blogsAtStart[0]
+
+        await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })

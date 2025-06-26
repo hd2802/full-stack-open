@@ -66,8 +66,8 @@ const blogToAdd = [
 */
 
 const getCurrentBlogs = async () => {
-  const response = await api.get('/api/blogs')
-  return response.toJSON()
+  const blogs = await Blog.find({})
+  return blogs.map(blog => blog.toJSON())
 }
 
 module.exports = {
