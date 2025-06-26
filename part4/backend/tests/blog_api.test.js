@@ -135,6 +135,28 @@ describe('deletion of a note', () => {
     })
 })
 
+describe('updating likes of a blog post', () => {
+    test('succeeds if id is valid', async () => {
+        const blogsAtStart = await helper.getCurrentBlogs()
+        const blogToBeUpdated = {...blogsAtStart[0]}
+
+        blogToBeUpdated.likes++
+
+        await api
+        .put(`/api/blogs/${blogToBeUpdated.id}`)
+        .send(blogToBeUpdated)
+        .expect(200)
+
+        const blogsAtEnd = await helper.getCurrentBlogs()
+
+        const updatedBlog = blogsAtEnd.find(
+        (blog) => blog.id === blogToBeUpdated.id
+        )
+
+        assert.deepStrictEqual(updatedBlog, blogToBeUpdated)
+    })
+})
+
 after(async () => {
     await mongoose.connection.close()
 })
