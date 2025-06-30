@@ -10,6 +10,8 @@ const middleware = require('./middleware/middleware')
 const blogsRouter = require('./controllers/blogs')
 const usersRouter = require('./controllers/users')
 
+const loginRouter = require('./controllers/login')
+
 // app config
 const app = express()
 app.use(express.json())
@@ -25,6 +27,7 @@ try {
 // router connections
 app.use('/api/blogs', blogsRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/login', loginRouter)
 
 // middleware connections
 app.use(middleware.requestLogger)
