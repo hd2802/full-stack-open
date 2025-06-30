@@ -28,5 +28,6 @@ app.use('/api/users', usersRouter)
 
 // middleware connections
 app.use(middleware.requestLogger)
+app.use(middleware.errorHandler)
 
 module.exports = app
