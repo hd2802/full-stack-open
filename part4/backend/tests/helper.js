@@ -2,7 +2,10 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 
 const app = require('../app')
+
 const Blog = require('../models/blog')
+const User = require('../models/user')
+
 const api = supertest(app)
 
 
@@ -70,8 +73,14 @@ const getCurrentBlogs = async () => {
   return blogs.map(blog => blog.toJSON())
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(user => user.toJSON())
+}
+
 module.exports = {
     initialBlogs,
     blogToAdd,
-    getCurrentBlogs
+    getCurrentBlogs,
+    usersInDb
 }

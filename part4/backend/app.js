@@ -8,6 +8,7 @@ const middleware = require('./middleware/middleware')
 
 // router imports
 const blogsRouter = require('./controllers/blogs')
+const usersRouter = require('./controllers/users')
 
 // app config
 const app = express()
@@ -23,6 +24,7 @@ try {
 
 // router connections
 app.use('/api/blogs', blogsRouter)
+app.use('/api/users', usersRouter)
 
 // middleware connections
 app.use(middleware.requestLogger)

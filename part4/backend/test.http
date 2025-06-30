@@ -7,3 +7,13 @@ Content-Type: application/json
     "url": "http://blog.cleancoder.com/uncle-bob/2016/05/01/TypeWars.html",
     "likes": "2"
 }
+
+###
+post http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+    "username": "root",
+    "name": "Superuser",
+    "password": "salainen"
+}
