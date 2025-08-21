@@ -17,13 +17,20 @@ const Statistics = (props) => {
   return (
     <div>
       <h1>statistics</h1>
-      <p>
-        good {good} <br></br>
-        neutral {neutral} <br></br>
-        bad {bad} <br></br>
-        average {calculateAverage()} <br></br>
-        positive {calculatePositivePercentage()} %
-      </p>
+      <div> 
+        {(good + neutral + bad) === 0 && (
+          <p>No feedback given </p>
+        )}
+        {(good + neutral + bad) !== 0 && (
+          <div>
+            good {good} <br></br>
+            neutral {neutral} <br></br>
+            bad {bad} <br></br>
+            average {calculateAverage()} <br></br>
+            positive {calculatePositivePercentage()} %
+          </div>
+        )}
+      </div>
     </div>
   )
 }
