@@ -20,7 +20,7 @@ const Statistics = (props) => {
   const calculatePositivePercentage = () => {
     if ((good + neutral + bad) === 0) return 0
     return (good / (good+bad+neutral)) * 100
-  }
+  } 
   return (
     <div>
       <h1>statistics</h1>
