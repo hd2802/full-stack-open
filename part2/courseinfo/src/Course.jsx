@@ -31,13 +31,18 @@ const Total = ({ parts }) => {
     )
 }
 
-const Course = ({ course }) => {
+const Course = ({ courses }) => {
     return (
-        <div>
+      <div>
+      {courses.map(
+        course =>
+          <div>
             <Header course={course} />
             <Content parts={course.parts} />
             <Total parts={course.parts} />
-        </div>
+          </div>
+      )}
+      </div>
     )
 }
 
