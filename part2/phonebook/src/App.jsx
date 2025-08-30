@@ -25,13 +25,16 @@ const NumberForm = ({ handleSubmit, newName, handleNameChange, newNumber, handle
   )
 }
 
-const Persons = ({ persons, searchTerm }) => {
+const Persons = ({ persons, searchTerm, handleDelete }) => {
   console.log(persons)
   return(
     <ul>
       {persons.map(person => {
         if(person.name.includes(searchTerm)){
-          return <li key={person.name}>{person.name} {person.number}</li>
+          return <li key={person.name}>{person.name} {person.number}
+            <button onClick={() => handleDelete(person.id)}>
+              delete
+            </button></li>
         }
       })}
     </ul>
@@ -53,6 +56,8 @@ const App = () => {
       })
   }, [])
 
+  let id_increment = persons.length + 1
+
   const handleSubmit = (event) => {
     event.preventDefault()
 
@@ -66,8 +71,11 @@ const App = () => {
 
     const newPerson = {
       name: newName,
-      number: newNumber
+      number: newNumber,
+      id: id_increment.toString()
     }
+
+    id_increment+=1
 
      personService
       .create(newPerson)
@@ -76,6 +84,18 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+  }
+
+  const handleDelete = (id) => {
+    if(window.confirm("Do you want to delete this contact?")) {
+      personService
+        .remove(id)
+        .then(response => {
+
+        })
+
+      setPersons(persons.filter(person => person.id !== id))
+    }
   }
 
   const handleNameChange = (event) => {
@@ -103,7 +123,7 @@ const App = () => {
         handleNumberChange={handleNumberChange} 
       />
       <h2>Numbers</h2>
-      <Persons persons={persons}  searchTerm={searchTerm}/>
+      <Persons persons={persons}  searchTerm={searchTerm} handleDelete={handleDelete}/>
     </div>
   )
 }
