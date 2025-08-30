@@ -59,23 +59,23 @@ const App = () => {
     persons.forEach(obj => {
       if (obj.name === newName) {
         alert(`${newName} is already in the phonebook`)
-      }
-      else {
-        const newPerson = {
-          name: newName,
-          number: newNumber
-        }
-
-        axios
-          .post('http://localhost:3001/persons', newPerson)
-          .then(response => {
-            setPersons(persons.concat(response.data))
-            setNewName('')
-            setNewNumber('')
-          })
+        return
       }
       }
     )
+
+    const newPerson = {
+      name: newName,
+      number: newNumber
+    }
+
+     axios
+        .post('http://localhost:3001/persons', newPerson)
+        .then(response => {
+          setPersons(persons.concat(response.data))
+          setNewName('')
+          setNewNumber('')
+        })
   }
 
   const handleNameChange = (event) => {
