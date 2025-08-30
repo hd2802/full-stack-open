@@ -26,7 +26,6 @@ const NumberForm = ({ handleSubmit, newName, handleNameChange, newNumber, handle
 }
 
 const Persons = ({ persons, searchTerm, handleDelete }) => {
-  console.log(persons)
   return(
     <ul>
       {persons.map(person => {
@@ -63,7 +62,10 @@ const App = () => {
 
     persons.forEach(obj => {
       if (obj.name === newName) {
-        alert(`${newName} is already in the phonebook`)
+        if(window.confirm(`${newName} is already in the phonebook. Would you like to update their number?`)){
+          updateNumber(obj.id)
+          return
+        }
         return
       }
       }
@@ -86,15 +88,25 @@ const App = () => {
       })
   }
 
+  const updateNumber = id => {
+    const person = persons.find(p => p.id === id)
+    const changedContact = {...person, number: newNumber}
+
+    personService
+      .update(id, changedContact)
+      .then(returnedContact => {
+        // had to use returnedContact.data here as returnedContact is not the data of the person itself
+        setPersons(persons.map(p => p.id === id ? returnedContact.data : p))
+      })
+  }
+
   const handleDelete = (id) => {
     if(window.confirm("Do you want to delete this contact?")) {
       personService
         .remove(id)
         .then(response => {
-
+          setPersons(persons.filter(person => person.id !== id))
         })
-
-      setPersons(persons.filter(person => person.id !== id))
     }
   }
 
