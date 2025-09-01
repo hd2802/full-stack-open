@@ -2,6 +2,9 @@ const express = require('express')
 const app = express()
 app.use(express.json())
 
+const cors = require('cors')
+app.use(cors())
+
 const morgan = require('morgan')
 app.use(morgan('tiny'))
 // note: not completing exercise 3.8 - too complicated and not compliant with privacy law so not likely to use in future
