@@ -24,7 +24,7 @@ const OneCountryView = ({ country }) => {
   )
 }
 
-const CountryView = ({ countrylist }) => {
+const CountryView = ({ countrylist, alterSearch }) => {
   if(countrylist.length === 0) {
     return <p>no matches</p>
   }
@@ -39,7 +39,10 @@ const CountryView = ({ countrylist }) => {
       <ul>
         {
           countrylist.map(country => {
-            return <li> {country.name.common} </li>
+            return <li> {country.name.common} 
+            <button onClick={() => alterSearch(country.name.common)}>
+              Show
+            </button></li>
           })
         }
       </ul>
@@ -63,6 +66,10 @@ const App = () => {
     setSearch(event.target.value)
   }
 
+  const alterSearch = (searchTerm) => {
+    setSearch(searchTerm)
+  }
+
   const filteredCountries = countries.filter(country => {
     // note: needed the return statement here to actually edit the values contained in filteredCountries
     return country.name.common.toUpperCase().includes(search.toUpperCase())
@@ -74,7 +81,8 @@ const App = () => {
         value={search}
         onChange={handleSearch}></input>
       <br></br>
-      <CountryView countrylist={filteredCountries}/>
+      <CountryView countrylist={filteredCountries}
+      alterSearch={alterSearch}/>
     </div>
   )
 }
