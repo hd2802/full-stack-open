@@ -1,13 +1,15 @@
 const express = require('express')
-
 const app = express()
 app.use(express.json())
 
+<<<<<<< HEAD
 const cors = require('cors')
 app.use(cors())
 
 app.use(express.static('dist'))
 
+=======
+>>>>>>> parent of 196ad05 (3.9: links part2 phonebook frontend with new phonebook backend)
 const morgan = require('morgan')
 app.use(morgan('tiny'))
 // note: not completing exercise 3.8 - too complicated and not compliant with privacy law so not likely to use in future
