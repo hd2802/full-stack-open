@@ -1,5 +1,30 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
+import './App.css';
+
+const ErrorNotification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
+const SuccessNotification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="success">
+      {message}
+    </div>
+  )
+}
 
 const Filter = ({ search, searchFunction }) => {
   return (
@@ -47,6 +72,9 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
 
+  const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
+
   useEffect(() => {
     personService
       .getAll()
@@ -86,6 +114,13 @@ const App = () => {
         setNewName('')
         setNewNumber('')
       })
+    setSuccessMessage(
+      `New contact added successfully`
+    )
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+
   }
 
   const updateNumber = id => {
@@ -98,6 +133,21 @@ const App = () => {
         // had to use returnedContact.data here as returnedContact is not the data of the person itself
         setPersons(persons.map(p => p.id === id ? returnedContact.data : p))
       })
+      .catch(error => {
+        setErrorMessage(
+          `Contact was already removed from the server`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
+    setSuccessMessage(
+      `Contact updated successfully`
+    )
+    setTimeout(() => {
+      setSuccessMessage(null)
+    }, 5000)
+    
   }
 
   const handleDelete = (id) => {
@@ -125,6 +175,8 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       <Filter search={searchTerm} searchFunction={handleSearch} />
       <h2>add a new</h2>
       <NumberForm 
