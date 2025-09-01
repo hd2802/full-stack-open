@@ -4,7 +4,7 @@ app.use(express.json())
 
 const morgan = require('morgan')
 app.use(morgan('tiny'))
-
+// note: not completing exercise 3.8 - too complicated and not compliant with privacy law so not likely to use in future
 
 let persons = [
     { 
