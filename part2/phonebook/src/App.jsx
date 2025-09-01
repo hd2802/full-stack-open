@@ -75,6 +75,8 @@ const App = () => {
   const [successMessage, setSuccessMessage] = useState(null)
   const [errorMessage, setErrorMessage] = useState(null)
 
+  console.log(persons)
+
   useEffect(() => {
     personService
       .getAll()
@@ -88,16 +90,15 @@ const App = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
 
-    persons.forEach(obj => {
-      if (obj.name === newName) {
-        if(window.confirm(`${newName} is already in the phonebook. Would you like to update their number?`)){
-          updateNumber(obj.id)
-          return
-        }
-        return
+    // using this instead of iterating through the array means that the return statement actually does something
+    const existingPerson = persons.find(p => p.name === newName)
+
+    if (existingPerson) {
+      if(window.confirm(`${newName} is already in the phonebook. Would you like to update their number?`)){
+        updateNumber(existingPerson.id)
       }
-      }
-    )
+      return 
+    }
 
     const newPerson = {
       name: newName,
@@ -129,6 +130,7 @@ const App = () => {
 
     personService
       .update(id, changedContact)
+
       .then(returnedContact => {
         // had to use returnedContact.data here as returnedContact is not the data of the person itself
         setPersons(persons.map(p => p.id === id ? returnedContact.data : p))
@@ -140,6 +142,7 @@ const App = () => {
         setTimeout(() => {
           setErrorMessage(null)
         }, 5000)
+        return
       })
     setSuccessMessage(
       `Contact updated successfully`
