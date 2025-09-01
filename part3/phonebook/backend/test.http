@@ -1,2 +1,22 @@
 ###
 DELETE http://localhost:3001/api/persons/1
+
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+# note: need a blank line between content type header and content 
+
+{
+    "name": "Madge",
+    "number": "6969"
+}
+
+###
+POST http://localhost:3001/api/persons/
+Content-Type: application/json
+# note: need a blank line between content type header and content 
+
+{
+    "name": "Arto Hellas",
+    "number": "12"
+}

@@ -25,6 +25,15 @@ let persons = [
     }
 ]
 
+// helper function for id generation
+const generateId = () => {
+    const maxId = persons.length > 0 ?
+        Math.max(...persons.map(n => Number(n.id)))
+        : 0
+
+    return String(maxId + 1)
+}
+
 app.get('/', (request, response) => {
     response.send('<h1>Hello world </h1>')
 })
@@ -50,6 +59,37 @@ app.get('/api/persons/:id', (request, response) => {
     } else {
         response.status(404).end()
     }
+})
+
+app.post('/api/persons', (request, response) => {
+    
+    const body = request.body
+
+    if(!body.name || !body.number) {
+        return response.status(400).json({
+            error: 'name or number missing'
+        })
+    }
+
+    // person in persons iterates through the keys/ids 
+    // person of persons iterates through the content itself 
+    for (const person of persons) {
+        if(person.name === body.name) {
+            console.log('found the person')
+            return response.status(400).json({
+                error: 'name must be unique'
+            })
+        }
+    }
+
+    const person = {
+        name: body.name,
+        number: body.number,
+        id: generateId()
+    }
+
+    persons = persons.concat(person)
+    response.json(person)
 })
 
 app.delete('/api/persons/:id', (request, response) => {
