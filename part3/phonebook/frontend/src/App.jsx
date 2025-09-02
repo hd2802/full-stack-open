@@ -108,19 +108,30 @@ const App = () => {
 
     id_increment+=1
 
-     personService
+    personService
       .create(newPerson)
       .then(response => {
         setPersons(persons.concat(response.data))
         setNewName('')
         setNewNumber('')
+
+        setSuccessMessage(
+          `New contact added successfully`
+        )
+        setTimeout(() => {
+          setSuccessMessage(null)
+        }, 5000)
       })
-    setSuccessMessage(
-      `New contact added successfully`
-    )
-    setTimeout(() => {
-      setSuccessMessage(null)
-    }, 5000)
+      .catch(error => {
+        console.log(error.response.data.error)
+
+        setErrorMessage(
+          `Contact has invalid length in either name or number`
+        )
+        setTimeout(() => {
+          setErrorMessage(null)
+        }, 5000)
+      })
 
   }
 
