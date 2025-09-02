@@ -14,8 +14,6 @@ app.use(morgan('tiny'))
 
 const Person = require('./models/person')
 
-
-
 app.get('/api/persons', (request, response) => {
     Person.find({}).then(persons => {
         response.json(persons)
@@ -37,6 +35,25 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson)
     })
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+    const { number } = request.body
+
+    Person.findById(request.params.id)
+        .then(person => {
+            if (!person) {
+                return response.status(404).end()
+            }
+            
+            person.number = number
+
+            return person.save().then((updatedPerson) => {
+                response.json(updatedPerson)
+            })
+            .catch(error => next(error))
+        })
+
 })
 
 app.delete('/api/persons/:id', (request, response, next) => {
