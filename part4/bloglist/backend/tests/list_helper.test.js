@@ -82,3 +82,26 @@ describe('total likes', () => {
     assert.strictEqual(result, 36)
   })
 })
+
+describe('favourite blog', () => {
+  const listWithOneBlog = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+      likes: 5,
+      __v: 0
+    }
+  ]
+
+   test('when list has only one blog, equals the that blog', () => {
+        const result = listHelper.favouriteBlog(listWithOneBlog)
+        assert.deepStrictEqual(result, listWithOneBlog[0])
+    })
+
+    test('when list has multiple blogs, equals the correct blog with most likes', () => {
+        const result = listHelper.favouriteBlog(blogs)
+        assert.deepStrictEqual(blogs[2], result)
+    })
+})
