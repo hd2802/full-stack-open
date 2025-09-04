@@ -9,11 +9,8 @@ const helper = require('./test_helper')
 const api = supertest(app)
 
 beforeEach(async () => {
-    await Blog.deleteMany({})
-    let blogObject = new Blog(helper.initialBlogs[0])
-    await blogObject.save()
-    blogObject = new Blog(helper.initialBlogs[1])
-    await blogObject.save()
+  await Blog.deleteMany({})
+  await Blog.insertMany(helper.initialBlogs)
 })
 
 test('blogs are returned as json', async () => {
@@ -37,6 +34,28 @@ test('all blogs have the id property', async () => {
   assert(keys.includes('id'))
   assert.strictEqual(keys.includes('_id'), false)
   
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: "Test blog",
+    author: "Test Author",
+    url: "testurl.com",
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  
+  const blogsAtEnd = await helper.blogsInDatabase()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+  const titles = blogsAtEnd.map(b => b.title)
+  assert(titles.includes("Test blog"))
+
 })
 
 after(async () => {
