@@ -141,10 +141,32 @@ describe('deleting a blog', () => {
 
     const blogsAtEnd = await helper.blogsInDatabase()
 
-    const titles = blogsAtEnd.map(b => b.titles)
+    const titles = blogsAtEnd.map(b => b.title)
     assert(!titles.includes(blogToDelete.title))
 
     assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  })
+})
+
+describe('updating the likes of a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDatabase()
+    const blogToUpdate = blogsAtStart[0]
+
+    const updatedBlog = {
+      likes: blogToUpdate.likes + 1
+    }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      // this is how we send data
+      .send(updatedBlog)
+      .expect(204)
+    
+      const blogsAtEnd = await helper.blogsInDatabase()
+      const updated = blogsAtEnd.find(b => b.id === blogToUpdate.id)
+
+      assert.strictEqual(updated.likes, blogToUpdate.likes + 1)
   })
 })
 
