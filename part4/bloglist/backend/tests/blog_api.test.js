@@ -58,6 +58,76 @@ test('a valid blog can be added', async () => {
 
 })
 
+test('a blog added without likes defaults that likes to 0', async () => {
+  await Blog.deleteMany({})
+
+  const newBlog = {
+    title: "Test blog",
+    author: "Test Author",
+    url: "testurl.com"
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+  
+  const blogsAtEnd = await helper.blogsInDatabase()  
+
+  const titles = blogsAtEnd.map(b => b.title)
+  assert(titles.includes("Test blog"))
+
+  const blogToView = blogsAtEnd[0]
+
+  const resultBlog = await api
+    .get(`/api/blogs/${blogToView.id}`)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(resultBlog.body.likes, 0)
+})
+
+test('a blog without a title is not added to the database', async () => {
+  const blogsAtStart = await helper.blogsInDatabase()
+
+  const newBlog = {
+    //title: "Test blog",
+    author: "Test Author",
+    url: "testurl.com",
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+  
+  const blogsAtEnd = await helper.blogsInDatabase()
+  
+  assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+})
+
+test('a blog without a url is not added to the database', async () => {
+  const blogsAtStart = await helper.blogsInDatabase()
+
+  const newBlog = {
+    title: "Test blog",
+    author: "Test Author",
+    //url: "testurl.com",
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+  
+  const blogsAtEnd = await helper.blogsInDatabase()
+  
+  assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })

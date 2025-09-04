@@ -18,14 +18,18 @@ blogsRouter.get('/:id', async (request, response, next) => {
 blogsRouter.post('/', async (request, response, next) => {
     const body = request.body
 
+    if(!body.title || !body.url ) {
+        return response.status(400).end()
+    }
+
     const blog = new Blog({
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes,
+        likes: body.likes || 0,
     })
 
-    const returnedBlog = blog.save()
+    const returnedBlog = await blog.save()
     response.status(201).json(returnedBlog)
 })
 
