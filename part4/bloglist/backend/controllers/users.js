@@ -8,6 +8,10 @@ usersRouter.post('/', async (request, response) => {
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password, saltRounds)
 
+    if(password.length < 3) {
+        return response.status(400).end()
+    }
+
     const user = new User({
         username, 
         name, 

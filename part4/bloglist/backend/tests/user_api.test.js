@@ -40,6 +40,59 @@ describe('when there is initially one user in db', () => {
     const usernames = usersAtEnd.map(u => u.username)
     assert(usernames.includes(newUser.username))
   })
+
+  test('creating fails with a non-unique username', async () => {
+    const usersAtStart = await helper.usersInDatabase()
+
+    const newUser = {
+        username: 'root',
+        password: 'test'
+    }
+
+    await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+    
+    const usersAtEnd = await helper.usersInDatabase()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+})
+
+describe('adding a new user', () => {
+    test('fails if the username is less than 3 characters long', async () => {
+        const usersAtStart = await helper.usersInDatabase()
+
+        const newUser = {
+            username: 'l',
+            password: 'test'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+        
+        const usersAtEnd = await helper.usersInDatabase()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+
+    test('fails if the password is less than 3 characters long', async () => {
+        const usersAtStart = await helper.usersInDatabase()
+        
+        const newUser = {
+            username: 'test',
+            password: 'b'
+        }
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+        
+        const usersAtEnd = await helper.usersInDatabase()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
 })
 
 after(async () => {
