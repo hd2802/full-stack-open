@@ -1,4 +1,4 @@
-const { test, after, beforeEach } = require('node:test')
+const { test, after, beforeEach, describe } = require('node:test')
 const assert = require('node:assert')
 const mongoose = require('mongoose')
 const supertest = require('supertest')
@@ -13,30 +13,33 @@ beforeEach(async () => {
   await Blog.insertMany(helper.initialBlogs)
 })
 
-test('blogs are returned as json', async () => {
+describe('when there are initially some blogs', () => {
+  test('blogs are returned as json', async () => {
     await api
         .get('/api/blogs')
         .expect(200)
-        .expect('Content-Type', /application\/json/)
-})
+          .expect('Content-Type', /application\/json/)
+  })
 
-test('all blogs are returned', async () => {
-  const response = await api.get('/api/blogs')
+  test('all blogs are returned', async () => {
+    const response = await api.get('/api/blogs')
 
-  assert.strictEqual(response.body.length, helper.initialBlogs.length)
-})
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+  })
 
-test('all blogs have the id property', async () => {
-  const response = await api.get('/api/blogs')
-  const result = response.body[0]
-  const keys = Object.keys(result)
+  test('all blogs have the id property', async () => {
+    const response = await api.get('/api/blogs')
+    const result = response.body[0]
+    const keys = Object.keys(result)
 
-  assert(keys.includes('id'))
-  assert.strictEqual(keys.includes('_id'), false)
+    assert(keys.includes('id'))
+    assert.strictEqual(keys.includes('_id'), false)
   
+  })
 })
 
-test('a valid blog can be added', async () => {
+describe('adding a new blog', () => {
+  test('a valid blog can be added', async () => {
   const newBlog = {
     title: "Test blog",
     author: "Test Author",
@@ -127,6 +130,24 @@ test('a blog without a url is not added to the database', async () => {
   
   assert.strictEqual(blogsAtStart.length, blogsAtEnd.length)
 })
+})
+
+describe('deleting a blog', () => {
+  test('succeeds with status code 204 if id is valid', async () => {
+    const blogsAtStart = await helper.blogsInDatabase()
+    const blogToDelete = blogsAtStart[0]
+
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+
+    const blogsAtEnd = await helper.blogsInDatabase()
+
+    const titles = blogsAtEnd.map(b => b.titles)
+    assert(!titles.includes(blogToDelete.title))
+
+    assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+  })
+})
+
 
 after(async () => {
     await mongoose.connection.close()
