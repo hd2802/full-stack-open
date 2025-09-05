@@ -33,7 +33,7 @@ Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY4YmFkYzg1MTBkYzQyOWRhMjRjM2JmMiIsImlhdCI6MTc1NzA3NzU2NH0.Ub1FMlicII9ebAf_sQmAMOuHG2vkV1NDiHq5lRaSrG0
 
 {
-    "title": "authorized blog title",
+    "title": "authorized blog title 2",
     "url": "authblog.com",
     "author": "authorizated author",
     "likes": 0
