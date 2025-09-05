@@ -26,9 +26,12 @@ const createUserAndGetToken = async () => {
     password: initialUser.password
   })
 
+  // return the token belonging to the user
   return loginResponse.body.token
 }
 
+// function allows authorization for a user before making blog requests
+// all functions go through this user so the tests now function correctly
 beforeEach(async () => {
   await Blog.deleteMany({})
   token = await createUserAndGetToken()
