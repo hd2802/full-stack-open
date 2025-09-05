@@ -1,6 +1,26 @@
 const blog = require("../models/blog")
 const User = require('../models/user')
 
+const jwt = require('jsonwebtoken')
+
+const initialUser = {
+  username: 'testuser',
+  password: 'testpassword',
+  name: 'Test User'
+}
+
+const createUserAndGetToken = async (api) => {
+  await User.deleteMany({})
+  await api.post('/api/users').send(initialUser)
+  
+  const loginResponse = await api.post('/api/login').send({
+    username: initialUser.username,
+    password: initialUser.password
+  })
+  
+  return loginResponse.body.token
+}
+
 const initialBlogs = [
   {
     _id: "5a422a851b54a676234d17f7",
@@ -33,5 +53,6 @@ const usersInDatabase = async () => {
 module.exports = {
     initialBlogs,
     blogsInDatabase,
-    usersInDatabase
+    usersInDatabase,
+    createUserAndGetToken
 }
