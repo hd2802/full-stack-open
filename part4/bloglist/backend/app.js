@@ -33,6 +33,3 @@ app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
 module.exports = app
-
-// skipping 4.20 - 4.23 auth exercises as asterisked exercises and too difficult for right now
-// not required for passing the course
