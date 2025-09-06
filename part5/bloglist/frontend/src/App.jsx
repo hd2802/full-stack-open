@@ -35,7 +35,6 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
 
@@ -118,6 +117,10 @@ const App = () => {
   const createBlog = async (event) => {
     event.preventDefault()
 
+    if(title === '' || author === '' || url === '') {
+      return
+    }
+
     try {
       const newObject = {
         title: title,
@@ -152,19 +155,6 @@ const App = () => {
 
     }
   }
-
-  const addLike = async (blogId, updatedBlog) => {
-    try {
-      const returnedBlog = await blogService.update(blogId, updatedBlog)
-
-      setBlogs(blogs.map(b => 
-        b.id === blogId ? { ...b, ...returnedBlog } : b
-      ))
-    } catch (error) {
-      console.error('Failed to update blog likes:', error)
-    }
-  }
-
 
   if(user === null) {
     return (
@@ -216,11 +206,7 @@ const App = () => {
         </div>
       )}
       {blogs.map(blog => 
-        <Blog key={blog.id} 
-          blog={blog} 
-          user={user} 
-          addLike={addLike}
-        />
+        <Blog key={blog.id} blog={blog} />
       )}
     </div>
   )

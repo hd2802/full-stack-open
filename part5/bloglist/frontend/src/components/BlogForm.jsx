@@ -8,8 +8,6 @@ const BlogForm = ({
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  if(title === '' || author === '' || url === '') return 
-
   return (
     <div>
       <div>
