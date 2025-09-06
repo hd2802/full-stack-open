@@ -81,7 +81,7 @@ const App = () => {
       console.log('Login failed:', error.response?.data || error.message)
 
       setErrorMessage(
-        `Login failed`
+        `wrong username or password`
       )
       setTimeout(() => {
         setErrorMessage(null)
