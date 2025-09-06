@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
 import './App.css'
+import BlogForm from './components/BlogForm'
 
 const ErrorNotification = ({ message }) => {
   if (message === null) {
@@ -28,51 +29,11 @@ const SuccessNotification = ({ message }) => {
   )
 }
 
-const BlogForm = ({
-  changeTitle,
-  changeAuthor,
-  changeUrl,
-  createBlog,
-  title, author, url
-}) => {
-  return (
-    <div>
-      <div>
-        <form onSubmit={createBlog}>
-          <div>
-            <label>
-              title:
-                <input type="text" value={title} onChange={changeTitle} />
-            </label>
-          </div>
-          <div>
-            <label>
-              author:
-                <input type="text" value={author} onChange={changeAuthor} />
-            </label>
-          </div>
-          <div>
-            <label>
-              url:
-                <input type="text" value={url} onChange={changeUrl} />
-            </label>
-          </div>
-          <button type="submit">create</button>
-        </form>
-      </div>
-    </div>
-  )
-}
-
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
@@ -195,18 +156,6 @@ const App = () => {
     }
   }
 
-  const changeTitle = (event) => {
-    setTitle(event.target.value)
-  }
-
-  const changeAuthor = (event) => {
-    setAuthor(event.target.value)
-  }
-
-  const changeUrl = (event) => {
-    setAuthor(event.target.value)
-  }
-
   if(user === null) {
     return (
       <div>
@@ -250,11 +199,8 @@ const App = () => {
       )}
       {viewBlogForm && (
         <div>
-          <BlogForm changeTitle={changeTitle}
-          changeAuthor={changeAuthor}
-          changeUrl={changeUrl}
-          createBlog={createBlog}
-          title={title} author={author} url={url} />
+          <BlogForm
+          createBlog={createBlog} />
 
           <button onClick={() => setViewBlogForm(false)}>cancel</button>
         </div>
