@@ -66,10 +66,26 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     return response.status(400).json({ error: 'blog to delete is not created by this user' })
 })
 
-blogsRouter.put('/:id', async (request, response, next) => {
-    const { likes } = request.body
-    await Blog.findByIdAndUpdate(request.params.id, { likes }, { new: true })
-    return response.status(204).end()
+blogsRouter.put('/:id', async (request, response) => {
+    const body = request.body
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+        request.params.id,
+        {
+            title: body.title,
+            author: body.author,
+            url: body.url,
+            likes: body.likes,
+            user: body.user
+        },
+        { new: true }
+    ).populate('user', { username: 1, name: 1 })
+
+    if (updatedBlog) {
+        response.json(updatedBlog)
+    } else {
+        response.status(404).end()
+    }
 })
 
 module.exports = blogsRouter
