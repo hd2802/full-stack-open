@@ -41,9 +41,18 @@ const App = () => {
 
   const [viewBlogForm, setViewBlogForm] = useState(false)
 
+  const sortBlogs = (blogA, blogB) => {
+    if(blogA.likes > blogB.likes) {
+      return -1
+    } else if (blogA.likes < blogB.likes) {
+      return 1
+    }
+    return 0
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort(sortBlogs) )
     )  
   }, [])
 
@@ -126,7 +135,7 @@ const App = () => {
       }
 
       const returnedBlog = await blogService.create(newObject)
-      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat(returnedBlog).sort(sortBlogs))
 
       setSuccessMessage(`${title} by ${author} added`)
 
@@ -139,6 +148,8 @@ const App = () => {
       }, 5000)
 
       setViewBlogForm(false)
+
+      blogs.sort((a,b) => a.likes - b.likes)
 
     } catch (error) {
       console.log('Login failed:', error.response?.data || error.message)
@@ -156,10 +167,14 @@ const App = () => {
   const addLike = async (blogId, updatedBlog) => {
     try {
       const returnedBlog = await blogService.update(blogId, updatedBlog)
-
+      
+      // updates all fields and saves them, even if not changing the,
       setBlogs(blogs.map(b => 
         b.id === blogId ? { ...b, ...returnedBlog } : b
-      ))
+      ).sort(sortBlogs))
+
+      blogs.sort((a,b) => a.likes - b.likes)
+
     } catch (error) {
       console.error('Failed to update blog likes:', error)
     }

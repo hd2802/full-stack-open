@@ -13,6 +13,7 @@ const Blog = ({ blog, user, addLike }) => {
 
   const incrementLikes = async () => {
     const updatedBlog = {
+      // explicitly stating each field allows for finer tuning of error handling
       title: blog.title,
       author: blog.author,
       url: blog.url,

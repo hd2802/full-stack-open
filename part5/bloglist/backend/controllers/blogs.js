@@ -79,9 +79,11 @@ blogsRouter.put('/:id', async (request, response) => {
             user: body.user
         },
         { new: true }
+        // add the populated user information - as already gathered in GET so update needs to do the same
     ).populate('user', { username: 1, name: 1 })
 
     if (updatedBlog) {
+        // changes this to return the changed blog for the frontend
         response.json(updatedBlog)
     } else {
         response.status(404).end()
