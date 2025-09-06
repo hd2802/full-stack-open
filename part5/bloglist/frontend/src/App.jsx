@@ -28,6 +28,42 @@ const SuccessNotification = ({ message }) => {
   )
 }
 
+const BlogForm = ({
+  changeTitle,
+  changeAuthor,
+  changeUrl,
+  createBlog,
+  title, author, url
+}) => {
+  return (
+    <div>
+      <div>
+        <form onSubmit={createBlog}>
+          <div>
+            <label>
+              title:
+                <input type="text" value={title} onChange={changeTitle} />
+            </label>
+          </div>
+          <div>
+            <label>
+              author:
+                <input type="text" value={author} onChange={changeAuthor} />
+            </label>
+          </div>
+          <div>
+            <label>
+              url:
+                <input type="text" value={url} onChange={changeUrl} />
+            </label>
+          </div>
+          <button type="submit">create</button>
+        </form>
+      </div>
+    </div>
+  )
+}
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
@@ -40,6 +76,8 @@ const App = () => {
 
   const [errorMessage, setErrorMessage] = useState(null)
   const [successMessage, setSuccessMessage] = useState(null)
+
+  const [viewBlogForm, setViewBlogForm] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -142,6 +180,8 @@ const App = () => {
         setSuccessMessage(null)
       }, 5000)
 
+      setViewBlogForm(false)
+
     } catch (error) {
       console.log('Login failed:', error.response?.data || error.message)
 
@@ -153,6 +193,18 @@ const App = () => {
       }, 5000)
 
     }
+  }
+
+  const changeTitle = (event) => {
+    setTitle(event.target.value)
+  }
+
+  const changeAuthor = (event) => {
+    setAuthor(event.target.value)
+  }
+
+  const changeUrl = (event) => {
+    setAuthor(event.target.value)
   }
 
   if(user === null) {
@@ -191,29 +243,22 @@ const App = () => {
           logout
         </button>
       </p>
-      <div>
-        <form onSubmit={createBlog}>
-          <div>
-            <label>
-              title:
-                <input type="text" value={title} onChange={( { target } ) => setTitle(target.value)} />
-            </label>
-          </div>
-          <div>
-            <label>
-              author:
-                <input type="text" value={author} onChange={( { target } ) => setAuthor(target.value)} />
-            </label>
-          </div>
-          <div>
-            <label>
-              url:
-                <input type="text" value={url} onChange={( { target } ) => setUrl(target.value)} />
-            </label>
-          </div>
-          <button type="submit">create</button>
-        </form>
-      </div>
+      {!viewBlogForm && (
+      <button onClick={() => setViewBlogForm(true)}>
+        create new blog
+      </button>
+      )}
+      {viewBlogForm && (
+        <div>
+          <BlogForm changeTitle={changeTitle}
+          changeAuthor={changeAuthor}
+          changeUrl={changeUrl}
+          createBlog={createBlog}
+          title={title} author={author} url={url} />
+
+          <button onClick={() => setViewBlogForm(false)}>cancel</button>
+        </div>
+      )}
       {blogs.map(blog => 
         <Blog key={blog.id} blog={blog} />
       )}
