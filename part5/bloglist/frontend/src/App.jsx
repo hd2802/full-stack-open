@@ -2,6 +2,31 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import './App.css'
+
+const ErrorNotification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="error">
+      {message}
+    </div>
+  )
+}
+
+const SuccessNotification = ({ message }) => {
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div className="success">
+      {message}
+    </div>
+  )
+}
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +37,9 @@ const App = () => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
+
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -43,8 +71,22 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+
+      setSuccessMessage('Logged in')
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+
     } catch (error) {
       console.log('Login failed:', error.response?.data || error.message)
+
+      setErrorMessage(
+        `Login failed`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+
     }
   }
 
@@ -54,8 +96,22 @@ const App = () => {
     try {
       setUser(null)
       window.localStorage.removeItem('loggedBlogappUser')
+
+      setSuccessMessage('Logged out')
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+
     } catch (error) {
       console.log('Logout failed:', error.response?.data || error.message )
+
+      setErrorMessage(
+        `Logout failed`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+
     }
   }
 
@@ -76,12 +132,26 @@ const App = () => {
       const returnedBlog = await blogService.create(newObject)
       setBlogs(blogs.concat(returnedBlog))
 
+      setSuccessMessage(`${title} by ${author} added`)
+
       setTitle('')
       setAuthor('')
       setUrl('')
 
+      setTimeout(() => {
+        setSuccessMessage(null)
+      }, 5000)
+
     } catch (error) {
       console.log('Login failed:', error.response?.data || error.message)
+
+      setErrorMessage(
+        `Failed to add new blog`
+      )
+      setTimeout(() => {
+        setErrorMessage(null)
+      }, 5000)
+
     }
   }
 
@@ -113,6 +183,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <SuccessNotification message={successMessage} />
+      <ErrorNotification message={errorMessage} />
       <p>
         {user.username} logged in 
         <button onClick={handleLogout}>
