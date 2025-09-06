@@ -50,6 +50,10 @@ const App = () => {
     return 0
   }
 
+  const deleteBlog = async (blogId) => {
+    await blogService.remove(blogId)
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs.sort(sortBlogs) )
@@ -235,6 +239,7 @@ const App = () => {
           blog={blog} 
           user={user} 
           addLike={addLike}
+          deleteBlog={deleteBlog}
         />
       )}
     </div>
