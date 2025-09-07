@@ -26,9 +26,24 @@ const update = (id, newObject) => {
   return request.then(response => response.data)
 }
 
+const remove = async (id) => {
+  // was getting an error here as I wasn't sending the token to the request for deletion
+  const config = {
+    headers: {Authorization: token}
+  }
+
+  try {
+    const response = await axios.delete(`${baseUrl}/${id}`, config)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 export default { 
   getAll,
   create,
   update,
-  setToken
+  setToken,
+  remove
 }
