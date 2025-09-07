@@ -14,7 +14,7 @@ const getAll = () => {
 
 const create = async (newObject) => {
   const config = {
-    headers : {Authorization: token}
+    headers : { Authorization: token }
   }
 
   const response = await axios.post(baseUrl, newObject, config)
@@ -29,7 +29,7 @@ const update = (id, newObject) => {
 const remove = async (id) => {
   // was getting an error here as I wasn't sending the token to the request for deletion
   const config = {
-    headers: {Authorization: token}
+    headers: { Authorization: token }
   }
 
   try {
@@ -40,7 +40,7 @@ const remove = async (id) => {
   }
 }
 
-export default { 
+export default {
   getAll,
   create,
   update,

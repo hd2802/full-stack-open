@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({ blog, updateLikes, user, deleteBlog}) => {
+const Blog = ({ blog, updateLikes, user, deleteBlog }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -37,17 +37,17 @@ const Blog = ({ blog, updateLikes, user, deleteBlog}) => {
 
       {viewAllDetails && (
         <div>
-        {blog.url}
-        <br></br>
-        likes: {blog.likes} 
-        <button onClick={addLike}>like</button>
-        <br></br>
-        {user.username}
-        <br></br>
-        <button onClick={removeBlog}>remove</button>
+          {blog.url}
+          <br></br>
+          likes: {blog.likes}
+          <button onClick={addLike}>like</button>
+          <br></br>
+          {user.username}
+          <br></br>
+          <button onClick={removeBlog}>remove</button>
         </div>
       )}
-    </div>  
+    </div>
   )
 }
 

@@ -42,8 +42,8 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs.sort(blogSort) )
-    )  
+      setBlogs( blogs.sort(blogSort))
+    )
   }, [])
 
   useEffect(() => {
@@ -57,7 +57,7 @@ const App = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    
+
     try {
       const user = await loginService.login({ username, password })
 
@@ -80,7 +80,7 @@ const App = () => {
       console.log('Login failed:', error.response?.data || error.message)
 
       setErrorMessage(
-        `wrong username or password`
+        'wrong username or password'
       )
       setTimeout(() => {
         setErrorMessage(null)
@@ -105,7 +105,7 @@ const App = () => {
       console.log('Logout failed:', error.response?.data || error.message )
 
       setErrorMessage(
-        `Logout failed`
+        'Logout failed'
       )
       setTimeout(() => {
         setErrorMessage(null)
@@ -114,12 +114,8 @@ const App = () => {
     }
   }
 
-  const createBlog = async (event) => {
+  const createBlog = async (event, title, author, url) => {
     event.preventDefault()
-
-    if(title === '' || author === '' || url === '') {
-      return
-    }
 
     try {
       const newObject = {
@@ -133,10 +129,6 @@ const App = () => {
 
       setSuccessMessage(`${title} by ${author} added`)
 
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-
       setTimeout(() => {
         setSuccessMessage(null)
       }, 5000)
@@ -147,7 +139,7 @@ const App = () => {
       console.log('Login failed:', error.response?.data || error.message)
 
       setErrorMessage(
-        `Failed to add new blog`
+        'Failed to add new blog'
       )
       setTimeout(() => {
         setErrorMessage(null)
@@ -171,8 +163,8 @@ const App = () => {
       const updatedBlog = await blogService.update(blogId, newBlogObject)
 
       setBlogs(blogs.map(blog => {
-          return blog.id === updatedBlog.id ? updatedBlog : blog
-        }
+        return blog.id === updatedBlog.id ? updatedBlog : blog
+      }
       ).sort(blogSort))
     } catch (error) {
       console.log(error)
@@ -182,10 +174,10 @@ const App = () => {
   const deleteBlog = async (blogId) => {
     await blogService.remove(blogId)
 
-    setBlogs(blogs.filter(blog =>{
-        return blog.id !== blogId
+    setBlogs(blogs.filter(blog => {
+      return blog.id !== blogId
     })
-    .sort(blogSort))
+      .sort(blogSort))
   }
 
   if(user === null) {
@@ -196,15 +188,15 @@ const App = () => {
           <div>
             <label>
               username
-                <input type="text" value={username} onChange={( { target }) => setUsername(target.value)}
-                />
+              <input type="text" value={username} onChange={( { target }) => setUsername(target.value)}
+              />
             </label>
           </div>
           <div>
             <label>
               password
-                <input type="password" value={password} onChange={( { target }) => setPassword(target.value)}
-                />
+              <input type="password" value={password} onChange={( { target }) => setPassword(target.value)}
+              />
             </label>
           </div>
           <button type="submit">login</button>
@@ -219,25 +211,25 @@ const App = () => {
       <SuccessNotification message={successMessage} />
       <ErrorNotification message={errorMessage} />
       <p>
-        {user.username} logged in 
+        {user.username} logged in
         <button onClick={handleLogout}>
           logout
         </button>
       </p>
       {!viewBlogForm && (
-      <button onClick={() => setViewBlogForm(true)}>
-        create new blog
-      </button>
+        <button onClick={() => setViewBlogForm(true)}>
+          create new blog
+        </button>
       )}
       {viewBlogForm && (
         <div>
           <BlogForm
-          createBlog={createBlog} />
+            createBlog={createBlog} />
 
           <button onClick={() => setViewBlogForm(false)}>cancel</button>
         </div>
       )}
-      {blogs.map(blog => 
+      {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user} deleteBlog={deleteBlog}/>
       )}
     </div>
