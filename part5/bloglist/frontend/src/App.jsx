@@ -156,6 +156,19 @@ const App = () => {
     }
   }
 
+  const updateLikes = async (blogId, newBlogObject) => {
+    try {
+      const updatedBlog = await blogService.update(blogId, newBlogObject)
+
+      setBlogs(blogs.map(blog => {
+          return blog.id === updatedBlog.id ? updatedBlog : blog
+        }
+      ))
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   if(user === null) {
     return (
       <div>
@@ -206,7 +219,7 @@ const App = () => {
         </div>
       )}
       {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
       )}
     </div>
   )
