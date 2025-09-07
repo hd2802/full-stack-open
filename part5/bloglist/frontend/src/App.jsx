@@ -42,11 +42,9 @@ const App = () => {
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
+      setBlogs( blogs.sort(blogSort) )
     )  
   }, [])
-
-  console.log(user)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -131,7 +129,7 @@ const App = () => {
       }
 
       const returnedBlog = await blogService.create(newObject)
-      setBlogs(blogs.concat(returnedBlog))
+      setBlogs(blogs.concat(returnedBlog).sort(blogSort))
 
       setSuccessMessage(`${title} by ${author} added`)
 
@@ -158,6 +156,16 @@ const App = () => {
     }
   }
 
+  const blogSort = (blogA,blogB) => {
+    if(blogA.likes > blogB.likes) {
+      return -1
+    }
+    else if (blogA.likes < blogB.likes) {
+      return 1
+    }
+    return 0
+  }
+
   const updateLikes = async (blogId, newBlogObject) => {
     try {
       const updatedBlog = await blogService.update(blogId, newBlogObject)
@@ -165,7 +173,7 @@ const App = () => {
       setBlogs(blogs.map(blog => {
           return blog.id === updatedBlog.id ? updatedBlog : blog
         }
-      ))
+      ).sort(blogSort))
     } catch (error) {
       console.log(error)
     }
