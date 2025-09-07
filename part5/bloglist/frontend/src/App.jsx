@@ -46,6 +46,8 @@ const App = () => {
     )  
   }, [])
 
+  console.log(user)
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if(loggedUserJSON) {
@@ -219,7 +221,7 @@ const App = () => {
         </div>
       )}
       {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} updateLikes={updateLikes}/>
+        <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user}/>
       )}
     </div>
   )
