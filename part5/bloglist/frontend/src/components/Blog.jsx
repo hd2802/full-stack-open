@@ -32,8 +32,10 @@ const Blog = ({ blog, updateLikes, user, deleteBlog }) => {
   const [viewAllDetails, setViewAllDetails] = useState(false)
 
   return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author}<button onClick={() => setViewAllDetails(true)}>view all details</button>
+    <div className='blog' style={blogStyle}>
+      {blog.title} {blog.author}<button onClick={() => setViewAllDetails(!viewAllDetails)}>{
+        viewAllDetails ? 'hide' : 'view all details'
+        }</button>
 
       {viewAllDetails && (
         <div>
