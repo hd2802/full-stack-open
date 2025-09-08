@@ -36,4 +36,18 @@ describe('Blog component', () => {
         const details = container.querySelector('.blog-details')
         expect(details).toBeNull()
     })
+
+    test('displays url and likes after clicking the view button', async () => {
+        const userSim = userEvent.setup()
+
+        render(
+            <Blog blog={blog} updateLikes={mockUpdateLikes} user={user} deleteBlog={mockDeleteBlog} />
+        )
+
+        const button = screen.getByText('view')
+        await userSim.click(button)
+
+        expect(screen.getByText('http://test.com')).toBeDefined()
+        expect(screen.getByText(/likes: 5/)).toBeDefined()
+    })
 })
