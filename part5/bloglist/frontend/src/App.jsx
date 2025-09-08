@@ -180,57 +180,69 @@ const App = () => {
       .sort(blogSort))
   }
 
-  if(user === null) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        <form onSubmit={handleLogin}>
-          <div>
-            <label>
-              username
-              <input type="text" value={username} onChange={( { target }) => setUsername(target.value)}
-              />
-            </label>
-          </div>
-          <div>
-            <label>
-              password
-              <input type="password" value={password} onChange={( { target }) => setPassword(target.value)}
-              />
-            </label>
-          </div>
-          <button type="submit">login</button>
-        </form>
-      </div>
-    )
-  }
-
   return (
     <div>
-      <h2>blogs</h2>
       <SuccessNotification message={successMessage} />
       <ErrorNotification message={errorMessage} />
-      <p>
-        {user.username} logged in
-        <button onClick={handleLogout}>
-          logout
-        </button>
-      </p>
-      {!viewBlogForm && (
-        <button onClick={() => setViewBlogForm(true)}>
-          create new blog
-        </button>
-      )}
-      {viewBlogForm && (
-        <div>
-          <BlogForm
-            createBlog={createBlog} />
 
-          <button onClick={() => setViewBlogForm(false)}>cancel</button>
+      {user === null ? (
+        <div>
+          <h2>Log in to application</h2>
+          <form onSubmit={handleLogin}>
+            <div>
+              <label>
+                username
+                <input
+                  type="text"
+                  value={username}
+                  onChange={({ target }) => setUsername(target.value)}
+                />
+              </label>
+            </div>
+            <div>
+              <label>
+                password
+                <input
+                  type="password"
+                  value={password}
+                  onChange={({ target }) => setPassword(target.value)}
+                />
+              </label>
+            </div>
+            <button type="submit">login</button>
+          </form>
         </div>
-      )}
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} updateLikes={updateLikes} user={user} deleteBlog={deleteBlog}/>
+      ) : (
+        <div>
+          <h2>blogs</h2>
+          <p>
+            {user.username} logged in
+            <button onClick={handleLogout}>
+              logout
+            </button>
+          </p>
+          {!viewBlogForm && (
+            <button onClick={() => setViewBlogForm(true)}>
+              create new blog
+            </button>
+          )}
+          {viewBlogForm && (
+            <div>
+              <BlogForm createBlog={createBlog} />
+
+              <button onClick={() => setViewBlogForm(false)}>cancel</button>
+            </div>
+          )}
+          {blogs.map(blog =>
+            <Blog
+              key={blog.id}
+              blog={blog}
+              updateLikes={updateLikes}
+              user={user}
+              deleteBlog={deleteBlog}
+            />
+          )}
+        </div>
       )}
     </div>
   )
