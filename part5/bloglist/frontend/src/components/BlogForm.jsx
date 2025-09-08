@@ -8,7 +8,9 @@ const BlogForm = ({
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const create = () => {
+  const create = (event) => {
+    event.preventDefault()
+    
     if(title === '' || author === '' || url === '') {
       return
     }
