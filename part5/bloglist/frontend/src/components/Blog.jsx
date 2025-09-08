@@ -32,17 +32,22 @@ const Blog = ({ blog, updateLikes, user, deleteBlog }) => {
   const [viewAllDetails, setViewAllDetails] = useState(false)
 
   return (
-    <div style={blogStyle}>
-      {blog.title} {blog.author}<button onClick={() => setViewAllDetails(true)}>view all details</button>
+    <div style={blogStyle} className="blog">
+      <div className="blog-header">
+        {blog.title} {blog.author}<button onClick={() => setViewAllDetails(!viewAllDetails)}>
+          {viewAllDetails ? 'hide' : 'view'}
+        </button>
+      </div>
 
       {viewAllDetails && (
-        <div>
-          {blog.url}
+        <div className="blog-details">
+          <div className="blog-url">{blog.url}</div>
           <br></br>
-          likes: {blog.likes}
-          <button onClick={addLike}>like</button>
+          <div className="blog-likes">likes: {blog.likes}
+            <button onClick={addLike}>like</button>
+          </div>
           <br></br>
-          {user.username}
+          <div className="blog-user"> {user.username} </div>
           <br></br>
           <button onClick={removeBlog}>remove</button>
         </div>
