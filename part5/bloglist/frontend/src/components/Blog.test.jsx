@@ -50,4 +50,22 @@ describe('Blog component', () => {
         expect(screen.getByText('http://test.com')).toBeDefined()
         expect(screen.getByText(/likes: 5/)).toBeDefined()
     })
+
+    test('clicking the like button twice calls the event handler twice', async() => {
+        const userSim = userEvent.setup()
+
+        render(
+            <Blog blog={blog} updateLikes={mockUpdateLikes} user={user} deleteBlog={mockDeleteBlog} />
+        )
+
+        const button = screen.getByText('view')
+        await userSim.click(button)
+
+        const likeButton = screen.getByText('like')
+        await userSim.click(likeButton)
+        await userSim.click(likeButton)
+
+        expect(mockUpdateLikes).toHaveBeenCalledTimes(2)
+        
+    })
 })
