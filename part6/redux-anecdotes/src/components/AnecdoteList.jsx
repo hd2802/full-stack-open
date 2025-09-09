@@ -12,10 +12,22 @@ const anecdoteSort = (a, b) => {
 }
 
 const AnecdoteList = () => {
-    const anecdotes = useSelector(state => state)
+    const dispatch = useDispatch()
+
+    const anecdotes = useSelector(state => {
+        if (state.filter === 'ALL') {
+            return state.anecdotes
+        }
+        else {
+            return state.anecdotes
+                // this function is toUpperCase not toUpper
+                .filter(anecdote => {
+                    anecdote.content.toUpperCase().includes(state.filter.toUpperCase())
+                })
+        }
+    })
 
     anecdotes.sort(anecdoteSort)
-    const dispatch = useDispatch()
 
     const vote = (id) => {
         console.log('vote', id)
