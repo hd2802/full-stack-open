@@ -17,6 +17,25 @@ const asObject = (anecdote) => {
   }
 }
 
+export const reducerVote = (id) => {
+  return {
+    type: 'VOTE',
+    payload: {
+      id
+    }
+  }
+}
+
+export const createAnecdote = (content) => {
+    return {
+        type: 'NEW_ANECDOTE',
+        payload: {
+            content,
+            id: getId(),
+        }
+    }
+}
+
 const initialState = anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
@@ -37,6 +56,9 @@ const reducer = (state = initialState, action) => {
           : anecdote
       ))
       return newState
+    
+    case 'NEW_ANECDOTE':
+      return [... state, {id: action.payload.id, content: action.payload.content, votes: 0}]
 
     default:
       return state
