@@ -6,22 +6,6 @@ import {
 } from 'react-router-dom'
 
 const Menu = () => {
-  const [anecdotes, setAnecdotes] = useState([
-    {
-      content: 'If it hurts, do it more often',
-      author: 'Jez Humble',
-      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
-      votes: 0,
-      id: 1
-    },
-    {
-      content: 'Premature optimization is the root of all evil',
-      author: 'Donald Knuth',
-      info: 'http://wiki.c2.com/?PrematureOptimization',
-      votes: 0,
-      id: 2
-    }
-  ])
   /**
    *  <div>
       <a href='#' style={padding}>anecdotes</a>
@@ -33,20 +17,11 @@ const Menu = () => {
     paddingRight: 5
   }
   return (
-    <Router>
       <div>
         <Link style={padding} to="/">home</Link>
         <Link style={padding} to="/create">create new</Link>
         <Link style={padding} to="/about">about</Link>
-
-        <Routes>
-          <Route path="/" element={<Home anecdotes={anecdotes}/>} />
-          <Route path="/about" element={<About />} />
-          <Route path="/create" element={<Create />} />
-          <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
-        </Routes>
       </div>
-    </Router>
   )
 }
 
@@ -142,17 +117,28 @@ const Home = ({ anecdotes }) => {
   )
 }
 
-const Create = () => {
+const App = () => {
+  const [anecdotes, setAnecdotes] = useState([
+    {
+      content: 'If it hurts, do it more often',
+      author: 'Jez Humble',
+      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
+      votes: 0,
+      id: 1
+    },
+    {
+      content: 'Premature optimization is the root of all evil',
+      author: 'Donald Knuth',
+      info: 'http://wiki.c2.com/?PrematureOptimization',
+      votes: 0,
+      id: 2
+    }
+  ])
+
   const addNew = (anecdote) => {
     anecdote.id = Math.round(Math.random() * 10000)
     setAnecdotes(anecdotes.concat(anecdote))
   }
-  return (
-    <CreateNew addNew={addNew} />
-  )
-}
-
-const App = () => {
 
   const [notification, setNotification] = useState('')
 
@@ -174,6 +160,13 @@ const App = () => {
     <div>
       <h1>Software anecdotes</h1>
       <Menu />
+      {/** this does not render anything but does define the paths - must be done in App */}
+        <Routes>
+          <Route path='/anecdotes/:id' element={<Anecdote anecdotes={anecdotes}/>}/>
+          <Route path='/' element={<AnecdoteList anecdotes={anecdotes}/>}/> 
+          <Route path='/about' element={<About/>}/> 
+          <Route path='/create' element={<CreateNew addNew={addNew} />}/> 
+        </Routes>
       <Footer />
     </div>
   )
