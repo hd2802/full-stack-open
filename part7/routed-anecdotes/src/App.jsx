@@ -82,31 +82,39 @@ const CreateNew = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     navigate('/')
   }
 
+  const handleReset = (event) => {
+    event.preventDefault()
+    content.onReset()
+    author.onReset()
+    info.onReset()
+  } 
+
   return (
     <div>
       <h2>create a new anecdote</h2>
-      <form onSubmit={handleSubmit}>
+      <form>
         <div>
           content
-          <input type={content.type} value={content.value} onChange={content.onChange}/>
+          <input {...content} />
         </div>
         <div>
           author
-          <input type={author.type} value={author.value} onChange={author.onChange}/>
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input type={info.type} value={info.value} onChange={info.onChange} />
+          <input {...info} />
         </div>
-        <button>create</button>
+        <button onClick={handleSubmit}>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
