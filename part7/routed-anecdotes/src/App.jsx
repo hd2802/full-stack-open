@@ -1,10 +1,27 @@
 import { useState } from 'react'
 import {
   BrowserRouter as Router,
-  Routes, Route, Link
+  Routes, Route, Link,
+  useParams
 } from 'react-router-dom'
 
 const Menu = () => {
+  const [anecdotes, setAnecdotes] = useState([
+    {
+      content: 'If it hurts, do it more often',
+      author: 'Jez Humble',
+      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
+      votes: 0,
+      id: 1
+    },
+    {
+      content: 'Premature optimization is the root of all evil',
+      author: 'Donald Knuth',
+      info: 'http://wiki.c2.com/?PrematureOptimization',
+      votes: 0,
+      id: 2
+    }
+  ])
   /**
    *  <div>
       <a href='#' style={padding}>anecdotes</a>
@@ -23,9 +40,10 @@ const Menu = () => {
         <Link style={padding} to="/about">about</Link>
 
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home anecdotes={anecdotes}/>} />
           <Route path="/about" element={<About />} />
           <Route path="/create" element={<Create />} />
+          <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
         </Routes>
       </div>
     </Router>
@@ -36,7 +54,11 @@ const AnecdoteList = ({ anecdotes }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
-      {anecdotes.map(anecdote => <li key={anecdote.id} >{anecdote.content}</li>)}
+      {anecdotes.map(anecdote => <li key={anecdote.id} >
+        <Link to={`/anecdotes/${anecdote.id}`}>
+          {anecdote.content}
+        </Link>
+      </li>)}
     </ul>
   </div>
 )
@@ -62,6 +84,18 @@ const Footer = () => (
     See <a href='https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js'>https://github.com/fullstack-hy2020/routed-anecdotes/blob/master/src/App.js</a> for the source code.
   </div>
 )
+
+const Anecdote = ({ anecdotes }) => {
+  const id = useParams().id
+  const anecdote = anecdotes.find(a => a.id === Number(id))
+
+  return (
+    <div>
+      <h2>{anecdote.content}</h2>
+      <p>has {anecdote.votes} votes</p>
+    </div>
+  )
+}
 
 const CreateNew = (props) => {
   const [content, setContent] = useState('')
@@ -101,23 +135,8 @@ const CreateNew = (props) => {
   )
 }
 
-const Home = () => {
-  const [anecdotes, setAnecdotes] = useState([
-    {
-      content: 'If it hurts, do it more often',
-      author: 'Jez Humble',
-      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
-      votes: 0,
-      id: 1
-    },
-    {
-      content: 'Premature optimization is the root of all evil',
-      author: 'Donald Knuth',
-      info: 'http://wiki.c2.com/?PrematureOptimization',
-      votes: 0,
-      id: 2
-    }
-  ])
+const Home = ({ anecdotes }) => {
+
   return (
     <AnecdoteList anecdotes={anecdotes} />
   )
