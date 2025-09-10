@@ -97,6 +97,8 @@ const CreateNew = (props) => {
     info.onReset()
   } 
 
+  // note: 7.6 already completed as no error message from resetting the form
+  
   return (
     <div>
       <h2>create a new anecdote</h2>
