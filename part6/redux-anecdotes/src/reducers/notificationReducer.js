@@ -24,6 +24,6 @@ export const createNotification = (content) => {
 
 // need to export these for them to be useable - even within this own file
 // notifications did not work without it
-export const { setNotification, clearNotification } = notificationSlice.actions
+export const { setNotification, removeNotification } = notificationSlice.actions
 
 export default notificationSlice.reducer
