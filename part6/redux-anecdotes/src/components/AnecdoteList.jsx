@@ -12,7 +12,17 @@ const anecdoteSort = (a, b) => {
 }
 
 const AnecdoteList = () => {
-    const anecdotes = useSelector(state => state)
+    const anecdotes = useSelector(state => {
+        if(state.filter === 'ALL') {
+            return state.anecdotes
+        } else {
+            return state.anecdotes.filter(anecdote => {
+                // keep forgetting that curly braces means that we need a return statement
+                // also do not need to reference state.filter.payload but instead just state.filter
+                return anecdote.content.toUpperCase().includes(state.filter.toUpperCase())
+            })
+        }
+    })
 
     anecdotes.sort(anecdoteSort)
     const dispatch = useDispatch()
