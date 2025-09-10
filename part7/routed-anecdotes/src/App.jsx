@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import {
-  BrowserRouter as Router,
   Routes, Route, Link,
-  useParams
+  useParams, useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -73,6 +72,8 @@ const Anecdote = ({ anecdotes }) => {
 }
 
 const CreateNew = (props) => {
+  const navigate = useNavigate()
+
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
@@ -86,6 +87,7 @@ const CreateNew = (props) => {
       info,
       votes: 0
     })
+    navigate('/')
   }
 
   return (
@@ -107,13 +109,6 @@ const CreateNew = (props) => {
         <button>create</button>
       </form>
     </div>
-  )
-}
-
-const Home = ({ anecdotes }) => {
-
-  return (
-    <AnecdoteList anecdotes={anecdotes} />
   )
 }
 
