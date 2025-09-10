@@ -4,9 +4,14 @@ import Notification from './components/Notification'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query' 
 import { getAnecdotes, updateAnecdote } from './requests'
 
+import { useNotificationDispatch } from './NotificationContext'
+
 const App = () => {
   // not having this line meant that the page only updated on reload
   const queryClient = useQueryClient()
+
+  // this useNotificationDispatch() must be used only once to fetch the function, NOT to be referred to as the function
+  const dispatchNotification = useNotificationDispatch()
 
   const updateAnecdoteMutation = useMutation({
     mutationFn: updateAnecdote,
@@ -18,6 +23,10 @@ const App = () => {
   const handleVote = (anecdote) => {
     console.log('vote')
     updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1})
+    dispatchNotification({ type: 'SET', payload: `voted for '${anecdote.content}'` })
+    setTimeout(() => {
+      dispatchNotification({ type: 'RESET' })  
+    }, 5000)
   }
 
   const result = useQuery({
