@@ -4,12 +4,26 @@ const notificationSlice = createSlice({
     name: 'notification',
     initialState: '',
     reducers: {
-        setNotification: (state,action) => {
+        setNotification: (state, action) => {
             return action.payload
+        },
+        removeNotification: (state, action) => {
+            return ''
         }
     }
 })
 
-export const { setNotification } = notificationSlice.actions
+export const createNotification = (content) => {
+    return dispatch => {
+        dispatch(setNotification(content))
+        setTimeout(() => {
+            dispatch(removeNotification())
+        }, 5000)
+    }
+}
+
+// need to export these for them to be useable - even within this own file
+// notifications did not work without it
+export const { setNotification, clearNotification } = notificationSlice.actions
 
 export default notificationSlice.reducer
