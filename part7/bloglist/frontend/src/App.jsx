@@ -1,34 +1,22 @@
 import { useState, useEffect } from "react";
-import Blog from "./components/Blog";
+
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import "./App.css";
+
+import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
+import Notification from "./components/Notification";
 
-const ErrorNotification = ({ message }) => {
-  if (message === null) {
-    return null;
-  }
-
-  return <div className="error">{message}</div>;
-};
-
-const SuccessNotification = ({ message }) => {
-  if (message === null) {
-    return null;
-  }
-
-  return <div className="success">{message}</div>;
-};
+import { createNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch() 
+
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
-
-  const [errorMessage, setErrorMessage] = useState(null);
-  const [successMessage, setSuccessMessage] = useState(null);
 
   const [viewBlogForm, setViewBlogForm] = useState(false);
 
@@ -59,17 +47,9 @@ const App = () => {
       setUsername("");
       setPassword("");
 
-      setSuccessMessage("Logged in");
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(createNotification('Logged in successfully', 'success'))
     } catch (error) {
-      console.log("Login failed:", error.response?.data || error.message);
-
-      setErrorMessage("wrong username or password");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('Login failed, please try again', 'error'))
     }
   };
 
@@ -80,17 +60,11 @@ const App = () => {
       setUser(null);
       window.localStorage.removeItem("loggedBlogappUser");
 
-      setSuccessMessage("Logged out");
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(createNotification('Logged out successfully', 'success'))
     } catch (error) {
       console.log("Logout failed:", error.response?.data || error.message);
 
-      setErrorMessage("Logout failed");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('Logout failed, please try again', 'error'))
     }
   };
 
@@ -107,20 +81,13 @@ const App = () => {
       const returnedBlog = await blogService.create(newObject);
       setBlogs(blogs.concat(returnedBlog).sort(blogSort));
 
-      setSuccessMessage(`${title} by ${author} added`);
-
-      setTimeout(() => {
-        setSuccessMessage(null);
-      }, 5000);
+      dispatch(createNotification(`${title} by ${author} added`, 'success'))
 
       setViewBlogForm(false);
     } catch (error) {
       console.log("Login failed:", error.response?.data || error.message);
 
-      setErrorMessage("Failed to add new blog");
-      setTimeout(() => {
-        setErrorMessage(null);
-      }, 5000);
+      dispatch(createNotification('Failed to add new blog', 'error'))
     }
   };
 
@@ -163,8 +130,7 @@ const App = () => {
 
   return (
     <div>
-      <SuccessNotification message={successMessage} />
-      <ErrorNotification message={errorMessage} />
+      <Notification />
 
       {user === null ? (
         <div>
