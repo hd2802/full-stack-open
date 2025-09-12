@@ -93,29 +93,15 @@ blogsRouter.get('/:id/comments', async (request, response, next) => {
     }
 })
 
-// very straightforward function, just saying that if a blog exists and a comment is sent to the request
-// then POST it in comments
-// we want to POST the new comment rather than PUT as PUT is for modifying an individual comment, not for adding a new one entirely
-blogsRouter.post('/:id/comments', async (request, response, next) => {
-    const { comment } = request.body
-    // find the blog by the id
-    const blog = await Blog.findById(request.params.id)
-
-    if (!blog) {
-        return response.status(404).json({ error: 'Blog not found' })
+blogsRouter.put('/:id/comments', async (request, response, next) => {
+    if(request.body.comments.length >= 0) {
+        await Blog.findByIdAndUpdate(request.params.id, request.body, {
+            new: true,
+        })
+        response.status(201).json(request.body)
+    } else {
+        response.status(401).json({ error: 'no comment included' })
     }
-
-    if (!comment || comment.trim() === '') {
-        return response.status(400).json({ error: 'Comment is missing or empty' })
-    }
-
-    // given the found blog, add the comment to the list of comments
-    blog.comments = blog.comments.concat(comment)
-    // then save the updated blog 
-    const updatedBlog = await blog.save()
-
-    response.status(201).json(updatedBlog.comments)
 })
-
 
 module.exports = blogsRouter
