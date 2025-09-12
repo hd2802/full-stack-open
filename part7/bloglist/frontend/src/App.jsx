@@ -32,7 +32,6 @@ const App = () => {
     if (loggedUserJSON) {
       const user = loggedUserJSON
       dispatch(setUser(user));
-      blogService.setToken(user.token);
     }
   }, []);
 

@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit"
 
 import loginService from "../services/login"
 import storageService from "../services/storage"
+import blogService from '../services/blogs'
 
 import { createNotification } from "./notificationReducer"
 
@@ -26,6 +27,7 @@ export const setUser = (loginCredentials) => {
             const user = await loginService.login(loginCredentials)
             storageService.saveUser(user)
             dispatch(logIn(user))
+            blogService.setToken(user.token);
             dispatch(createNotification("Logged in successfully", "success"));
             return user
         } catch (error) {
