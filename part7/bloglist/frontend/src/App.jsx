@@ -1,16 +1,16 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { Routes, Route } from "react-router-dom";
 
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-import storageService from './services/storage'
+import storageService from "./services/storage";
 
-import Blog from "./components/Blog";
-import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 
 import { initialiseBlogs, addNewBlog } from "./reducers/blogReducer";
-import { setUser, removeUser } from './reducers/loginReducer'
+import { setUser, removeUser, restoreUser } from "./reducers/loginReducer";
+
+import Blogs from "./pages/Blogs";
+import Users from "./pages/Users";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -18,45 +18,31 @@ const App = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const [viewBlogForm, setViewBlogForm] = useState(false);
-
   const blogs = useSelector((state) => state.blogs);
-  const user = useSelector((state) => state.login)
+  const user = useSelector((state) => state.login);
 
   useEffect(() => {
     dispatch(initialiseBlogs());
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = storageService.loadUser()
+    const loggedUserJSON = storageService.loadUser();
     if (loggedUserJSON) {
-      const user = loggedUserJSON
-      dispatch(setUser(user));
+      dispatch(restoreUser(loggedUserJSON));
     }
   }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    await dispatch(setUser({ username, password }))
+    await dispatch(setUser({ username, password }));
     setUsername("");
     setPassword("");
   };
 
   const handleLogout = async (event) => {
-    event.preventDefault()
-    await dispatch(removeUser())
-  };
-
-  const createBlog = async (title, author, url) => {
-    const newObject = {
-      title: title,
-      author: author,
-      url: url,
-      likes: 0,
-    };
-    dispatch(addNewBlog(newObject));
-    setViewBlogForm(false);
+    event.preventDefault();
+    await dispatch(removeUser());
   };
 
   return (
@@ -92,26 +78,14 @@ const App = () => {
         </div>
       ) : (
         <div>
-          <h2>blogs</h2>
           <p>
             {user.username} logged in
             <button onClick={handleLogout}>logout</button>
           </p>
-          {!viewBlogForm && (
-            <button onClick={() => setViewBlogForm(true)}>
-              create new blog
-            </button>
-          )}
-          {viewBlogForm && (
-            <div>
-              <BlogForm createBlog={createBlog} />
-
-              <button onClick={() => setViewBlogForm(false)}>cancel</button>
-            </div>
-          )}
-          {blogs.map((blog) => (
-            <Blog key={blog.id} blog={blog} user={user} />
-          ))}
+          <Routes>
+            <Route path="/" element={<Blogs />} />
+            <Route path="/users" element={<Users />} />
+          </Routes>
         </div>
       )}
     </div>
