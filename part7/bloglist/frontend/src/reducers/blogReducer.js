@@ -61,18 +61,32 @@ export const addLike = (content) => {
         title: content.title,
         url: content.url,
         user: content.user.id || content.user._id,
+        comments: content.comments
       };
       // needed to add the backend call here - before we weren't doing this and it created a success notification
       // but nothing was actually changing
       const returnedBlog = await blogService.update(content.id, updatedBlog);
       dispatch(updateBlog(returnedBlog));
-      dispatch(createNotification(`${updatedBlog.title} was liked`));
+      dispatch(createNotification(`${updatedBlog.title} was liked`, 'success'));
     } catch (error) {
       console.log(error);
       dispatch(createNotification("Failed to like the blog", "error"));
     }
   };
 };
+
+export const addComment = (blogId, comment) => {
+  return async (dispatch) => {
+    try {
+      const updatedBlog = await blogService.addComment(blogId, comment);
+      dispatch(updateBlog(updatedBlog));
+      dispatch(createNotification('Comment added', "success"));
+    } catch (error) {
+      console.log(error);
+      dispatch(createNotification("Failed to add comment", "error"));
+    }
+  }
+}
 
 export const deleteBlog = (blog) => {
   return async (dispatch) => {
