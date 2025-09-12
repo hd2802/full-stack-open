@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from 'react-redux'
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -8,12 +9,12 @@ import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 
 import { createNotification } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { initialiseBlogs, addNewBlog } from './reducers/blogReducer'
+
 
 const App = () => {
   const dispatch = useDispatch() 
 
-  const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState(null);
@@ -21,8 +22,10 @@ const App = () => {
   const [viewBlogForm, setViewBlogForm] = useState(false);
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs.sort(blogSort)));
-  }, []);
+    dispatch(initialiseBlogs())
+  }, [])
+
+  const blogs = useSelector(state => state.blogs)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -68,18 +71,17 @@ const App = () => {
     }
   };
 
-  const createBlog = async (event, title, author, url) => {
-    event.preventDefault();
+  const createBlog = async ( title, author, url) => {
 
     try {
       const newObject = {
         title: title,
         author: author,
         url: url,
+        likes: 0
       };
 
-      const returnedBlog = await blogService.create(newObject);
-      setBlogs(blogs.concat(returnedBlog).sort(blogSort));
+      dispatch(addNewBlog(newObject))
 
       dispatch(createNotification(`${title} by ${author} added`, 'success'))
 
@@ -89,15 +91,6 @@ const App = () => {
 
       dispatch(createNotification('Failed to add new blog', 'error'))
     }
-  };
-
-  const blogSort = (blogA, blogB) => {
-    if (blogA.likes > blogB.likes) {
-      return -1;
-    } else if (blogA.likes < blogB.likes) {
-      return 1;
-    }
-    return 0;
   };
 
   const updateLikes = async (blogId, newBlogObject) => {
