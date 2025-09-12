@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -36,8 +37,7 @@ blogsRouter.post('/', async (request, response, next) => {
         author: body.author,
         url: body.url,
         likes: body.likes || 0,
-        user: user._id,
-        comments: body.comments || []
+        user: user._id
     })
 
     const returnedBlog = await blog.save()
@@ -66,42 +66,14 @@ blogsRouter.delete('/:id', async (request, response, next) => {
     return response.status(400).json({ error: 'blog to delete is not created by this user' })
 })
 
-blogsRouter.post('/:id/comments', async (request, response, next) => {
-  const { comment } = request.body
-  const user = request.user
-
-  if(!user) {
-    return response.status(400).json({ error: 'userId missing or not valid' })
-  }
-
-  if(!comment) {
-    return response.status(400).json({ error: 'comment content missing' })
-  }
-
-  const blog = await Blog.findById(request.params.id)
-  
-  if(!blog) {
-    return response.status(404).json({ error: 'blog not found' })
-  }
-
-  blog.comments = blog.comments.concat(comment)
-  await blog.save()
-
-  const updatedBlog = await Blog.findById(request.params.id)
-    .populate('user', { username: 1, name: 1 })
-
-  response.json(updatedBlog)
-})
-
 blogsRouter.put('/:id', async (request, response, next) => {
-    const { user, likes, author, title, url, comments } = request.body
+    const { user, likes, author, title, url } = request.body
     const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, { 
         user: user,
         likes: likes,
         author: author,
         title: title,
-        url: url,
-        comments: comments
+        url: url
     }, {new: true})
     .populate('user', { username: 1, name: 1})
     
