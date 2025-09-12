@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Link } from "react-router-dom";
 
 import storageService from "./services/storage";
 
@@ -54,6 +54,11 @@ const App = () => {
     await dispatch(removeUser());
   };
 
+  const padding = {
+    padding: 5,
+    backgroundColor: "#C0C0C0"
+  }
+
   return (
     <div>
       <Notification />
@@ -88,10 +93,13 @@ const App = () => {
       ) : (
         <div>
           <h2>blogs</h2>
-          <p>
-            {user.username} logged in
-            <button onClick={handleLogout}>logout</button>
-          </p>
+          <div style={padding}>
+            <Link style={padding} to="/">home</Link>
+            <Link style={padding} to="/users">notes</Link>
+                      {user.username} logged in
+              <button onClick={handleLogout}>logout</button>
+
+          </div>
           <Routes>
             <Route path="/" element={<Blogs />} />
             <Route path="/users" element={<Users users={users}/>} />
