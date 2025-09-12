@@ -28,6 +28,7 @@ const Blogs = () => {
     dispatch(addNewBlog(newObject));
     setViewBlogForm(false);
   };
+  
   return (
     <div>
       <h2>blogs</h2>
@@ -41,9 +42,11 @@ const Blogs = () => {
           <button onClick={() => setViewBlogForm(false)}>cancel</button>
         </div>
       )}
+      
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} user={user} />
       ))}
+
     </div>
   );
 };

@@ -1,7 +1,3 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { initialiseUsers } from "../reducers/userReducer";
-
 import User from "../components/User";
 
 const Users = ({ users }) => {

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useDispatch } from "react-redux";
-import { addLike, deleteBlog } from "../reducers/blogReducer";
+import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, user }) => {
   const dispatch = useDispatch();
@@ -13,44 +13,12 @@ const Blog = ({ blog, user }) => {
     marginBottom: 5,
   };
 
-  //console.log(blog.id)
-
-  const updateLikes = () => {
-    dispatch(addLike(blog));
-  };
-
-  const removeBlog = async () => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      dispatch(deleteBlog(blog));
-    }
-  };
-
-  const [viewAllDetails, setViewAllDetails] = useState(false);
-
   return (
-    <div style={blogStyle} className="blog">
-      <div className="blog-header">
+    <Link to={`/blogs/${blog.id}`}>
+      <div style={blogStyle}> 
         {blog.title} {blog.author}
-        <button onClick={() => setViewAllDetails(!viewAllDetails)}>
-          {viewAllDetails ? "hide" : "view"}
-        </button>
       </div>
-
-      {viewAllDetails && (
-        <div className="blog-details">
-          <div className="blog-url">{blog.url}</div>
-          <br></br>
-          <div className="blog-likes">
-            likes: {blog.likes}
-            <button onClick={updateLikes}>like</button>
-          </div>
-          <br></br>
-          <div className="blog-user"> {user.username} </div>
-          <br></br>
-          <button onClick={removeBlog}>remove</button>
-        </div>
-      )}
-    </div>
+    </Link>
   );
 };
 

@@ -13,6 +13,7 @@ import { initialiseUsers } from "./reducers/userReducer";
 import Blogs from "./pages/Blogs";
 import Users from "./pages/Users";
 import UserBlogs from "./pages/UserBlogs"
+import BlogPage from "./pages/BlogPage"
 
 const App = () => {
   const dispatch = useDispatch();
@@ -95,6 +96,7 @@ const App = () => {
             <Route path="/" element={<Blogs />} />
             <Route path="/users" element={<Users users={users}/>} />
             <Route path="/users/:id" element={<UserBlogs users={users} />} />
+            <Route path="/blogs/:id" element={<BlogPage blogs={blogs} />} />
           </Routes>
         </div>
       )}
