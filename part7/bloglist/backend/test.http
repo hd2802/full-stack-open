@@ -57,6 +57,20 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc
     "likes": 0
 }
 
+###
+PUT http://localhost:3003/api/blogs/68c4a4ea5571079d2dcc0ec3/comments
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY4YzI5MjljODdjYTY5Y2I5NDdlOTczZiIsImlhdCI6MTc1NzY1NzQ0N30.g3-XGhIMhxRWRGC2D7yXdd0F_iURE5-X0FgWGsqIVfo
+
+{
+    "title": "authorized blog title 2",
+    "url": "authblog.com",
+    "author": "authorizated author",
+    "likes": 0,
+    "comments": "This is a new comment"
+}
+
+
 ### 
 DELETE http://localhost:3003/api/blogs/68baea3517f249c1f8bf6f97
 Content-Type: application/json
@@ -71,3 +85,4 @@ Content-Type: application/json
     "name": "Test User",
     "password": "testpassword"
 }
+
