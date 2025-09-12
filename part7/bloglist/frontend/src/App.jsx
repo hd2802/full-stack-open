@@ -3,34 +3,35 @@ import { useDispatch, useSelector } from "react-redux";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
+import storageService from './services/storage'
 
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 
-import { createNotification } from "./reducers/notificationReducer";
-import { initialiseBlogs, addNewBlog, addLike } from "./reducers/blogReducer";
+import { initialiseBlogs, addNewBlog } from "./reducers/blogReducer";
+import { setUser, removeUser } from './reducers/loginReducer'
 
 const App = () => {
   const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState(null);
 
   const [viewBlogForm, setViewBlogForm] = useState(false);
 
   const blogs = useSelector((state) => state.blogs);
+  const user = useSelector((state) => state.login)
 
   useEffect(() => {
     dispatch(initialiseBlogs());
   }, []);
 
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    const loggedUserJSON = storageService.loadUser()
     if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
+      const user = loggedUserJSON
+      dispatch(setUser(user));
       blogService.setToken(user.token);
     }
   }, []);
@@ -38,36 +39,14 @@ const App = () => {
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    try {
-      const user = await loginService.login({ username, password });
-
-      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
-
-      blogService.setToken(user.token);
-
-      setUser(user);
-      setUsername("");
-      setPassword("");
-
-      dispatch(createNotification("Logged in successfully", "success"));
-    } catch (error) {
-      dispatch(createNotification("Login failed, please try again", "error"));
-    }
+    await dispatch(setUser({ username, password }))
+    setUsername("");
+    setPassword("");
   };
 
   const handleLogout = async (event) => {
-    event.preventDefault();
-
-    try {
-      setUser(null);
-      window.localStorage.removeItem("loggedBlogappUser");
-
-      dispatch(createNotification("Logged out successfully", "success"));
-    } catch (error) {
-      console.log("Logout failed:", error.response?.data || error.message);
-
-      dispatch(createNotification("Logout failed, please try again", "error"));
-    }
+    event.preventDefault()
+    await dispatch(removeUser())
   };
 
   const createBlog = async (title, author, url) => {
