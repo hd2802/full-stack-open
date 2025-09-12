@@ -1,6 +1,10 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addLike, deleteBlog } from "../reducers/blogReducer";
 
-const Blog = ({ blog, updateLikes, user, deleteBlog }) => {
+const Blog = ({ blog, user }) => {
+  const dispatch = useDispatch();
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -11,21 +15,13 @@ const Blog = ({ blog, updateLikes, user, deleteBlog }) => {
 
   //console.log(blog.id)
 
-  const addLike = async () => {
-    const blogObject = {
-      user: blog.user.id,
-      likes: blog.likes + 1,
-      author: blog.author,
-      title: blog.title,
-      url: blog.url,
-    };
-
-    await updateLikes(blog.id, blogObject);
+  const updateLikes = () => {
+    dispatch(addLike(blog));
   };
 
   const removeBlog = async () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
-      await deleteBlog(blog.id);
+      dispatch(deleteBlog(blog));
     }
   };
 
@@ -46,7 +42,7 @@ const Blog = ({ blog, updateLikes, user, deleteBlog }) => {
           <br></br>
           <div className="blog-likes">
             likes: {blog.likes}
-            <button onClick={addLike}>like</button>
+            <button onClick={updateLikes}>like</button>
           </div>
           <br></br>
           <div className="blog-user"> {user.username} </div>

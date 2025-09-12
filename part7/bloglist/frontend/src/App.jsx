@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from "react-redux";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -8,12 +8,11 @@ import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 
-import { createNotification } from './reducers/notificationReducer'
-import { initialiseBlogs, addNewBlog } from './reducers/blogReducer'
-
+import { createNotification } from "./reducers/notificationReducer";
+import { initialiseBlogs, addNewBlog, addLike } from "./reducers/blogReducer";
 
 const App = () => {
-  const dispatch = useDispatch() 
+  const dispatch = useDispatch();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -21,11 +20,11 @@ const App = () => {
 
   const [viewBlogForm, setViewBlogForm] = useState(false);
 
-  useEffect(() => {
-    dispatch(initialiseBlogs())
-  }, [])
+  const blogs = useSelector((state) => state.blogs);
 
-  const blogs = useSelector(state => state.blogs)
+  useEffect(() => {
+    dispatch(initialiseBlogs());
+  }, []);
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
@@ -50,9 +49,9 @@ const App = () => {
       setUsername("");
       setPassword("");
 
-      dispatch(createNotification('Logged in successfully', 'success'))
+      dispatch(createNotification("Logged in successfully", "success"));
     } catch (error) {
-      dispatch(createNotification('Login failed, please try again', 'error'))
+      dispatch(createNotification("Login failed, please try again", "error"));
     }
   };
 
@@ -63,62 +62,23 @@ const App = () => {
       setUser(null);
       window.localStorage.removeItem("loggedBlogappUser");
 
-      dispatch(createNotification('Logged out successfully', 'success'))
+      dispatch(createNotification("Logged out successfully", "success"));
     } catch (error) {
       console.log("Logout failed:", error.response?.data || error.message);
 
-      dispatch(createNotification('Logout failed, please try again', 'error'))
+      dispatch(createNotification("Logout failed, please try again", "error"));
     }
   };
 
-  const createBlog = async ( title, author, url) => {
-
-    try {
-      const newObject = {
-        title: title,
-        author: author,
-        url: url,
-        likes: 0
-      };
-
-      dispatch(addNewBlog(newObject))
-
-      dispatch(createNotification(`${title} by ${author} added`, 'success'))
-
-      setViewBlogForm(false);
-    } catch (error) {
-      console.log("Login failed:", error.response?.data || error.message);
-
-      dispatch(createNotification('Failed to add new blog', 'error'))
-    }
-  };
-
-  const updateLikes = async (blogId, newBlogObject) => {
-    try {
-      const updatedBlog = await blogService.update(blogId, newBlogObject);
-
-      setBlogs(
-        blogs
-          .map((blog) => {
-            return blog.id === updatedBlog.id ? updatedBlog : blog;
-          })
-          .sort(blogSort),
-      );
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const deleteBlog = async (blogId) => {
-    await blogService.remove(blogId);
-
-    setBlogs(
-      blogs
-        .filter((blog) => {
-          return blog.id !== blogId;
-        })
-        .sort(blogSort),
-    );
+  const createBlog = async (title, author, url) => {
+    const newObject = {
+      title: title,
+      author: author,
+      url: url,
+      likes: 0,
+    };
+    dispatch(addNewBlog(newObject));
+    setViewBlogForm(false);
   };
 
   return (
@@ -172,13 +132,7 @@ const App = () => {
             </div>
           )}
           {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              updateLikes={updateLikes}
-              user={user}
-              deleteBlog={deleteBlog}
-            />
+            <Blog key={blog.id} blog={blog} user={user} />
           ))}
         </div>
       )}
