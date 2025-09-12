@@ -8,9 +8,11 @@ import Notification from "./components/Notification";
 
 import { initialiseBlogs, addNewBlog } from "./reducers/blogReducer";
 import { setUser, removeUser, restoreUser } from "./reducers/loginReducer";
+import { initialiseUsers } from "./reducers/userReducer";
 
 import Blogs from "./pages/Blogs";
 import Users from "./pages/Users";
+import UserBlogs from "./pages/UserBlogs"
 
 const App = () => {
   const dispatch = useDispatch();
@@ -31,6 +33,12 @@ const App = () => {
       dispatch(restoreUser(loggedUserJSON));
     }
   }, []);
+
+  const users = useSelector((state) => state.users);
+
+    useEffect(() => {
+      dispatch(initialiseUsers());
+    }, []);
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -78,13 +86,15 @@ const App = () => {
         </div>
       ) : (
         <div>
+          <h2>blogs</h2>
           <p>
             {user.username} logged in
             <button onClick={handleLogout}>logout</button>
           </p>
           <Routes>
             <Route path="/" element={<Blogs />} />
-            <Route path="/users" element={<Users />} />
+            <Route path="/users" element={<Users users={users}/>} />
+            <Route path="/users/:id" element={<UserBlogs users={users} />} />
           </Routes>
         </div>
       )}

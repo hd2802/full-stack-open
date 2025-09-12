@@ -30,7 +30,7 @@ const Blogs = () => {
   };
   return (
     <div>
-      <h2>added blogs</h2>
+      <h2>blogs</h2>
       {!viewBlogForm && (
         <button onClick={() => setViewBlogForm(true)}>create new blog</button>
       )}

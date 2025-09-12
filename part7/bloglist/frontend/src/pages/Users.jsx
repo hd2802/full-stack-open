@@ -4,14 +4,7 @@ import { initialiseUsers } from "../reducers/userReducer";
 
 import User from "../components/User";
 
-const Users = () => {
-  const dispatch = useDispatch();
-
-  const users = useSelector((state) => state.users);
-
-  useEffect(() => {
-    dispatch(initialiseUsers());
-  }, []);
+const Users = ({ users }) => {
 
   return (
     <div>
