@@ -1,7 +1,10 @@
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useState } from "react"
-import { addLike } from "../reducers/blogReducer"
+
+import { addLike, addCommentToBlog } from "../reducers/blogReducer"
+
+import blogService from "../services/blogs"
 
 const BlogPage = ({ blogs }) => {
   const dispatch = useDispatch();
@@ -18,6 +21,19 @@ const BlogPage = ({ blogs }) => {
     return <div>Loading blog...</div>;
   }
 
+  const handleSubmit = async (event) => {
+    event.preventDefault() 
+    try {
+      const newComment = await blogService.addComment(id, { content : comment})
+      dispatch(addCommentToBlog({ 
+        blogId: id, 
+        comment: newComment }))
+      setComment('')
+    } catch (error) {
+      console.error('Error adding comment:', error);
+    }
+  }
+
   return (
     <div>
       <h2>{blog.title} by {blog.author}</h2>
@@ -31,13 +47,13 @@ const BlogPage = ({ blogs }) => {
 
       <div>
         <h3>comments</h3>
-        <form>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             value={comment}
             onChange={({ target }) => setComment(target.value)}
           />
-          <button type="submit"></button>
+          <button type="submit">add comment</button>
         </form>
         {blog.comments && (
           <ul>
