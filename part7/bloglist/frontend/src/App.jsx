@@ -3,14 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import blogService from "./services/blogs";
 import loginService from "./services/login";
-import storageService from './services/storage'
 
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import Notification from "./components/Notification";
 
-import { initialiseBlogs, addNewBlog } from "./reducers/blogReducer";
-import { logIn } from './reducers/loginReducer'
+import { createNotification } from "./reducers/notificationReducer";
+import { initialiseBlogs, addNewBlog, addLike } from "./reducers/blogReducer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -22,24 +21,53 @@ const App = () => {
   const [viewBlogForm, setViewBlogForm] = useState(false);
 
   const blogs = useSelector((state) => state.blogs);
-  const loggedUser = useSelect((state) => state.login)
 
   useEffect(() => {
-    if (loggedUser) {
-      dispatch(initialiseBlogs());
-    }
-  }, [dispatch]);
+    dispatch(initialiseBlogs());
+  }, []);
 
   useEffect(() => {
-    const user = storageService.loadUser()
-    if (user) {
-      blogService.setToken(user.token)
-      dispatch(logIn(user))
+    const loggedUserJSON = window.localStorage.getItem("loggedBlogappUser");
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON);
+      setUser(user);
+      blogService.setToken(user.token);
     }
   }, []);
 
+  const handleLogin = async (event) => {
+    event.preventDefault();
+
+    try {
+      const user = await loginService.login({ username, password });
+
+      window.localStorage.setItem("loggedBlogappUser", JSON.stringify(user));
+
+      blogService.setToken(user.token);
+
+      setUser(user);
+      setUsername("");
+      setPassword("");
+
+      dispatch(createNotification("Logged in successfully", "success"));
+    } catch (error) {
+      dispatch(createNotification("Login failed, please try again", "error"));
+    }
+  };
+
   const handleLogout = async (event) => {
-    
+    event.preventDefault();
+
+    try {
+      setUser(null);
+      window.localStorage.removeItem("loggedBlogappUser");
+
+      dispatch(createNotification("Logged out successfully", "success"));
+    } catch (error) {
+      console.log("Logout failed:", error.response?.data || error.message);
+
+      dispatch(createNotification("Logout failed, please try again", "error"));
+    }
   };
 
   const createBlog = async (title, author, url) => {
