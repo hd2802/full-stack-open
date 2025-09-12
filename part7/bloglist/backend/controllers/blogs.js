@@ -1,7 +1,7 @@
+const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
-const Comment = require('../models/comment')
 
 blogsRouter.get('/', async (request, response) => {
     const blogs = await Blog
@@ -11,19 +11,12 @@ blogsRouter.get('/', async (request, response) => {
 })
 
 blogsRouter.get('/:id', async (request, response, next) => {
-  const blog = await Blog.findById(request.params.id).populate('user', { username: 1, name: 1 })
-  
-  if (blog) {
-    // Get comments for this blog
-    const comments = await Comment.find({ blog: request.params.id })
-    const blogWithComments = {
-      ...blog.toJSON(),
-      comments: comments
+    const blog = await Blog.findById(request.params.id)
+    if(blog) {
+        response.json(blog)
+    } else {
+        response.status(404).end()
     }
-    response.json(blogWithComments)
-  } else {
-    response.status(404).end()
-  }
 })
 
 blogsRouter.post('/', async (request, response, next) => {
@@ -90,34 +83,6 @@ blogsRouter.put('/:id', async (request, response, next) => {
     } else {
         response.status(404).end()
     }
-})
-
-blogsRouter.post('/:id/comments', async (request, response, next) => {
-    const { content } = request.body
-    const blogId = request.params.id
-    
-    if (!content) {
-        return response.status(400).json({ error: 'content missing' })
-    }
-
-    const blog = await Blog.findById(blogId)
-
-    if(!blog) {
-        return response.status(404).json({ error: 'blog not found' })
-    }
-
-    const comment = new Comment({
-        content: content,
-        blog: blogId
-    })
-
-    const savedComment = await comment.save()
-    response.status(201).json(savedComment)
-})
-
-blogsRouter.get('/:id/comments', async (request, response) => {
-  const comments = await Comment.find({ blog: request.params.id })
-  response.json(comments)
 })
 
 module.exports = blogsRouter
