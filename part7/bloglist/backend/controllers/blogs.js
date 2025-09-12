@@ -1,3 +1,4 @@
+const jwt = require('jsonwebtoken')
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
@@ -81,26 +82,6 @@ blogsRouter.put('/:id', async (request, response, next) => {
         response.json(updatedBlog)
     } else {
         response.status(404).end()
-    }
-})
-
-blogsRouter.get('/:id/comments', async (request, response, next) => {
-    const blog = await Blog.findById(request.params.id)
-    if(blog) {
-        response.json(blog.comments)
-    } else {
-        response.status(404).end()
-    }
-})
-
-blogsRouter.put('/:id/comments', async (request, response, next) => {
-    if(request.body.comments.length >= 0) {
-        await Blog.findByIdAndUpdate(request.params.id, request.body, {
-            new: true,
-        })
-        response.status(201).json(request.body)
-    } else {
-        response.status(401).json({ error: 'no comment included' })
     }
 })
 
