@@ -55,10 +55,8 @@ export const addNewBlog = (content) => {
 export const addComment = (content, newComment) => {
   return async (dispatch) => {
     try {
-      const updatedBlog = {
-        ...content, comments: comments.concat(newComment)
-      }
-      const returnedBlog = await blogService.update(content.id, updatedBlog)
+      console.log(newComment)
+      const returnedBlog = await blogService.addComment(content.id, newComment)
       dispatch(updateBlog(returnedBlog))
       dispatch(createNotification('added comment successfully', 'success'))
     } catch (error) {

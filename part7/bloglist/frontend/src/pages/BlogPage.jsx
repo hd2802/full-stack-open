@@ -1,10 +1,13 @@
+import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { addLike } from "../reducers/blogReducer"
+import { addLike, addComment } from "../reducers/blogReducer"
 
 const BlogPage = ({ blogs }) => {
     const dispatch = useDispatch();
     const id = useParams().id
+
+    const [comment, setComment] = useState('')
 
     const blog = blogs.find(b => b.id === id)
 
@@ -16,10 +19,14 @@ const BlogPage = ({ blogs }) => {
         dispatch(addLike(blog))
     }
 
-    // for generating a unique key for each blog post
-    const generateId = () => {
-        const max = blog.comments.length 
-        return max + 1
+    const handleSubmit = (event) => {
+        event.preventDefault()
+
+        if(comment === "") {
+            return
+        }
+        dispatch(addComment(blog, comment))
+        setComment('')
     }
 
     return (
@@ -33,9 +40,18 @@ const BlogPage = ({ blogs }) => {
             </p>
             <p>added by {blog.user.username}</p>
             <h3>comments</h3>
+            <form onSubmit={handleSubmit}>
+                 <input 
+                    type="text"
+                    value={comment}
+                    onChange={({ target }) => setComment(target.value)}
+                />
+                <button type="submit">add comment</button>
+            </form>
             <ul>
-                {blog.comments.map(com => 
-                    <li key={generateId()}>{com}</li>
+                {/** This works for adding a key as the comments are static and cannot be deleted/reordered */}
+                {blog.comments.map((com, index) => 
+                    <li key={index}>{com}</li>
                 )}
             </ul>
         </div>

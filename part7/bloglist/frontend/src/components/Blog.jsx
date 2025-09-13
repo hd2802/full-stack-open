@@ -1,9 +1,6 @@
-import { useState } from "react";
-import { useDispatch } from "react-redux";
 import { Link } from 'react-router-dom'
 
 const Blog = ({ blog, user }) => {
-  const dispatch = useDispatch();
 
   const blogStyle = {
     paddingTop: 10,
