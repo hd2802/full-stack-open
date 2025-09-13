@@ -8,10 +8,19 @@ const BlogPage = ({ blogs }) => {
 
     const blog = blogs.find(b => b.id === id)
 
+    if(!blog) {
+        return <div>loading...</div>
+    }
+
     const updateLikes = () => {
         dispatch(addLike(blog))
     }
 
+    // for generating a unique key for each blog post
+    const generateId = () => {
+        const max = blog.comments.length 
+        return max + 1
+    }
 
     return (
         <div>
@@ -23,6 +32,12 @@ const BlogPage = ({ blogs }) => {
                 </button>
             </p>
             <p>added by {blog.user.username}</p>
+            <h3>comments</h3>
+            <ul>
+                {blog.comments.map(com => 
+                    <li key={generateId()}>{com}</li>
+                )}
+            </ul>
         </div>
     )  
 }

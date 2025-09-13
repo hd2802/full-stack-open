@@ -21,6 +21,7 @@ const create = async (newObject) => {
   return response.data;
 };
 
+// assuming that this can be used for updating comments as well as the likes of the blog
 const update = (id, newObject) => {
   const request = axios.put(`${baseUrl}/${id}`, newObject);
   return request.then((response) => response.data);

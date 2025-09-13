@@ -58,9 +58,13 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc
 }
 
 ### 
-DELETE http://localhost:3003/api/blogs/68baea3517f249c1f8bf6f97
+PUT http://localhost:3003/api/blogs/68c5183bbc2b35c267368c51/comments
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QiLCJpZCI6IjY4YmFkYzg1MTBkYzQyOWRhMjRjM2JmMiIsImlhdCI6MTc1NzA3NzU2NH0.Ub1FMlicII9ebAf_sQmAMOuHG2vkV1NDiHq5lRaSrG0
+
+{
+    "comment": "this is a new comment"
+}
 
 ###
 POST http://localhost:3003/api/users
