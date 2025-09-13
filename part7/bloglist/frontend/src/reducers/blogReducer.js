@@ -55,16 +55,18 @@ export const addNewBlog = (content) => {
 export const addComment = (content, newComment) => {
   return async (dispatch) => {
     try {
-      console.log(newComment)
-      const returnedBlog = await blogService.addComment(content.id, newComment)
-      dispatch(updateBlog(returnedBlog))
-      dispatch(createNotification('added comment successfully', 'success'))
+      console.log(newComment);
+      const returnedBlog = await blogService.addComment(content.id, newComment);
+      dispatch(updateBlog(returnedBlog));
+      dispatch(createNotification("added comment successfully", "success"));
     } catch (error) {
-      console.log(error)
-      dispatch(createNotification("Failed to add a comment to the blog", "error"))
+      console.log(error);
+      dispatch(
+        createNotification("Failed to add a comment to the blog", "error"),
+      );
     }
-  }
-}
+  };
+};
 
 export const addLike = (content) => {
   return async (dispatch) => {
@@ -80,7 +82,7 @@ export const addLike = (content) => {
       // but nothing was actually changing
       const returnedBlog = await blogService.update(content.id, updatedBlog);
       dispatch(updateBlog(returnedBlog));
-      dispatch(createNotification(`${updatedBlog.title} was liked`, 'success'));
+      dispatch(createNotification(`${updatedBlog.title} was liked`, "success"));
     } catch (error) {
       console.log(error);
       dispatch(createNotification("Failed to like the blog", "error"));

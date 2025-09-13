@@ -1,11 +1,11 @@
 import User from "../components/User";
+import { Table } from "react-bootstrap";
 
 const Users = ({ users }) => {
-
   return (
     <div>
       <h2>Users</h2>
-      <table>
+      <Table striped>
         <thead>
           <tr>
             <th>User</th>
@@ -17,7 +17,7 @@ const Users = ({ users }) => {
             <User key={user_data.id} user_data={user_data} />
           ))}
         </tbody>
-      </table>
+      </Table>
     </div>
   );
 };

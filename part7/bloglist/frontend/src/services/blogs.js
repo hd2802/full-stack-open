@@ -21,7 +21,7 @@ const create = async (newObject) => {
   return response.data;
 };
 
-//WRONG WRONG assuming that this can be used for updating comments as well as the likes of the blog 
+//WRONG WRONG assuming that this can be used for updating comments as well as the likes of the blog
 const update = (id, newObject) => {
   const request = axios.put(`${baseUrl}/${id}`, newObject);
   return request.then((response) => response.data);
@@ -29,8 +29,9 @@ const update = (id, newObject) => {
 
 const addComment = (id, comment) => {
   // was using POST instead of PUT here and this was causing a 404 error
-  return axios.put(`${baseUrl}/${id}/comments`, { comment })
-    .then(response => response.data);
+  return axios
+    .put(`${baseUrl}/${id}/comments`, { comment })
+    .then((response) => response.data);
 };
 
 const remove = async (id) => {
@@ -53,5 +54,5 @@ export default {
   update,
   setToken,
   remove,
-  addComment
+  addComment,
 };

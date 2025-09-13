@@ -6,6 +6,8 @@ import BlogForm from "../components/BlogForm";
 
 import { initialiseBlogs, addNewBlog } from "../reducers/blogReducer";
 
+import { Button } from "react-bootstrap"
+
 const Blogs = () => {
   const dispatch = useDispatch();
 
@@ -28,25 +30,23 @@ const Blogs = () => {
     dispatch(addNewBlog(newObject));
     setViewBlogForm(false);
   };
-  
+
   return (
     <div>
-      <h2>blogs</h2>
       {!viewBlogForm && (
-        <button onClick={() => setViewBlogForm(true)}>create new blog</button>
+        <Button onClick={() => setViewBlogForm(true)}>create new blog</Button>
       )}
       {viewBlogForm && (
         <div>
           <BlogForm createBlog={createBlog} />
 
-          <button onClick={() => setViewBlogForm(false)}>cancel</button>
+          <Button onClick={() => setViewBlogForm(false)}>cancel</Button>
         </div>
       )}
-      
+
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} user={user} />
       ))}
-
     </div>
   );
 };
